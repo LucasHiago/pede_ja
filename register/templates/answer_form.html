@@ -1,0 +1,10 @@
+{% load bulma_tags %}
+
+<section class="box">
+  <h1 class="title is-4 has-text-primary has-text-weight-light">Resposta</h1>
+  <form id="create-answer" method="POST">
+    {% csrf_token %}
+      
+    {{ form.answer|bulma }}
+    <button class="button is-primary" type="submit">Enviar</button>
+  </form></section>

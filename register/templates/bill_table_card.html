@@ -1,0 +1,26 @@
+<div class="card has-padding">
+    <div class="media">
+        <div class="media-left">
+            <a href="{% url 'register:bill_member_on_bill_list' bill.pk %}" class="is-size-4 has-text-weight-bold has-text-grey-dark">
+                {% if bill.table.name == 'order_remote' %}
+                    Retirada no Balcão
+                {% else %}
+                    {{bill.table.name}}
+                {% endif %}
+            </a>
+            <p class="has-text-grey-dark">Conta #{{bill.id}} - <span class="has-text-grey-light">
+             {% if bill.customers.count == 1 %}
+                {{ bill.customers.first.first_name }} {{ bill.customers.first.last_name }}
+             {% else %}   
+                {{bill.customers.count}} Usuário{{ bill.customers.count|pluralize }}
+             {% endif %}
+             </span>
+            </p>
+        </div>
+        <div class="media-content"></div>
+        <div class="media-right">
+            <p class="has-text-grey-light has-text-right">Total</p>
+            <p class="is-size-4 has-text-right has-text-primary has-text-weight-bold">R$ {{bill.all_value_bill|floatformat:2}}</p>
+        </div>
+    </div>
+</div>

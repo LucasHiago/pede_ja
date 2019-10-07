@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <h3>Você tem certeza que deseja remover a avaliação do {{ all_items.establishment.name }}?</h3>
+        <button type="submit" class="button is-primary has-magt-2 is-complete">Sim</button>
+    </form>
+
+
+{% endblock %}

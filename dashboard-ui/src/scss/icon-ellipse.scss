@@ -1,0 +1,18 @@
+.icon-ellipse {
+  $size: 4rem;
+
+  position: relative;
+  width: $size;
+  height: $size;
+  background-color: $grey-lighter;
+  border-radius: ($size / 2);
+  font-size: 1.5rem;
+  overflow: hidden;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

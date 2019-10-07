@@ -1,0 +1,119 @@
+{% extends 'establishment_base.html' %}
+
+{% block title %}Avaliações{% endblock %}
+
+{% block content %}
+  <div class="columns">
+    <div class="column is-10 is-offset-1">
+      <div class="columns is-multiline">
+        {% if not request.user.is_superuser %}
+        <div class="column is-full">
+          <h1 class=" is-size-3 has-text-primary">Avaliações do Estabelecimento {{all_items.0.bill.establishment.name}}</h1>
+        </div>
+        {% endif %}
+        <div class="column is-full">
+          <div class="box">
+            <table class="table is-fullwidth is-striped">
+              <thead>
+                <th>Usuário</th>
+                <th>Comida</th>
+                <th>Ambiente</th>
+                <th>Serviço</th>
+                <th>Comentário</th>
+                <th></th>
+              </thead>
+              <tbody>
+                {% for review in all_evaluations_from_establishment %}
+                  <tr>
+                    <td>{{review.user.customer.first_name}}</td>
+                    <td>{{review.food}}</td>
+                    <td>{{review.environment}}</td>
+                    <td>{{review.service}}</td>
+                    <td>{{review.observation}}</td>
+                    <td>
+                      <div class="buttons are-small">
+                        {% if request.user.manager %}  
+                          {% if not review.establishment_answer.answer %}
+                              <a onclick="createAnswer('{% url 'register:answer_evaluation' review.pk %}')" class="button is-primary">Responder</a>
+                          {% endif %}
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                          <a onclick="deleteAction('{% url 'register:evaluation_delete' review.pk %}', '{{ csrf_token }}')" class="button is-outlined is-primary">Excluir</a>
+                      </div>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% if review.establishment_answer.answer %}
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <p class="has-text-weight-bold has-text-danger">Resposta:</p>
+                        <p>{{review.establishment_answer.answer}}</p>
+                      </td>
+                      <td><a onclick="deleteAction('{% url 'register:evaluation_answer_delete' review.establishment_answer.pk %}', '{{ csrf_token }}')" class="button is-outlined is-small is-primary">Excluir resposta</a></td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+            {% if is_paginated %}
+                {% include 'pagination.html' %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+      
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content"></div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+  
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra-js %}
+<script>
+function createAnswer(url){
+    
+    $.get(url, function(){
+    })
+        
+    .done(function(data){
+        $(".modal > .modal-content").html(data);
+        $(".modal").addClass("is-active");
+        $(".modal .modal-content button.is-danger").click(function(){
+            $(".modal").removeClass("is-active");
+        });
+        
+        $("form#create-answer").submit(function (event) {
+            event.preventDefault();
+            
+            $.post(url, $('#create-answer').serialize())
+        
+            .done(function (data) {
+                location.reload(); 
+            })
+        
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });      
+        })
+    })
+        
+    .fail(function(xhr){
+        alert("Failed");
+    });
+    
+    $(".modal-close, .modal-background").click(function(){
+        $(this).parents(".modal").removeClass("is-active");
+    });
+}
+</script>
+{% endblock %}

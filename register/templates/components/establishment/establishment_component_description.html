@@ -1,0 +1,69 @@
+
+
+<div class="columns is-multiline has-magt-2">
+    <div class="card column is-full">
+        <div class="media">
+            <div class="media-left">
+                <img class="restaurant-card__avatar is-120" src="{{ establishment.logo_url.url }}">
+            </div>
+
+            <div class="media-content has-pad-3">
+                <label class="label is-size-5 has-text-weight-normal has-text-primary">Nome</label>
+                <p class="is-border-bottom as-pickup">{{ establishment.name }}</p>
+
+                <label for="" class="label is-size-5 has-text-weight-normal has-text-primary">
+                    Tipo de Cozinha
+                </label>
+
+                <p class="is-border-bottom as-pickup">{{ establishment.cuisine_type }}</p>
+            </div>
+
+            <div class="media-right has-magt-2 has-magr-2">
+                <button id="activate_obs" class="button is-link is-outlined">
+                    <a id="card-description"
+                        href="{% url 'register:establishment_update_description' establishment.pk %}"> Editar </a>
+                </button>
+            </div>
+        </div>
+        <div class="column is-full has-padl-4 has-padr-4">
+            <label for="" class="label is-size-5 has-text-weight-normal has-text-primary">Descrição</label>
+            <p class="is-border-top as-pickup">{{ establishment.description }}</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal table_item">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+{% block extra-js %}
+<script>
+    $("a#card-description").click(function (e) {
+        e.stopImmediatePropagation(); // those pesky handlers
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+</script>
+{% endblock %}

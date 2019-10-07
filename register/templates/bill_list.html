@@ -1,0 +1,51 @@
+{% extends 'establishment_base.html' %}
+{% load load_permissions %}
+
+{% block title %}Contas{% endblock %}
+
+{% block content %}
+    <div class="columns">
+      <div class="column is-10 is-offset-1">
+        <div class="columns is-multiline">
+            {% if not request.user.is_superuser %}
+                <div class="column is-full">
+                    <h1 class="is-size-3 has-text-primary">Contas em Aberto</h1>
+            {% endif %}        
+                {% include 'bills_navigation_tab.html' %}
+                <div class="column is-one-third">
+                    <form id="searchform" action="{% url 'register:bill_search_list' establishment.id %}">
+                        <div class="field">
+                            <div class="control">
+                                <input name="q" type="text" class="input" id="searchbox" placeholder="Busque pelo nome do Usuario">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% for bill in all_items %}
+                <div class="column is-half">
+                    {% include 'bill_table_card.html' %}
+                </div>
+            {% empty %}
+                <div class="column is-one-third">
+                    <div class="box">
+                        <h2 class="has-text-danger is-size-4">Sem items</h2>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block extra-js %}
+    <script>
+        $("#searchbox").keydown(function(key){
+            //13 is enter
+            if(key.which == 13){
+                $("#searchform").submit();
+            }
+        });
+    </script>
+
+{% endblock %}

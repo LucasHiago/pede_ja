@@ -1,0 +1,10 @@
+{% extends 'nav_tabs.html' %}
+
+{% block tab_elements %}
+<li {% if request.resolver_match.url_name == "bill_list" %} class="is-active" {% endif %}>
+    <a href="{% url 'register:bill_list' establishment.pk %}">Contas em Aberto</a>
+</li>
+<li {% if request.resolver_match.url_name == "bill_list_closed" %} class="is-active" {% endif %}>
+    <a href="{% url 'register:bill_list_closed' establishment.pk %}">Contas Pagas</a>
+</li>
+{% endblock tab_elements %}

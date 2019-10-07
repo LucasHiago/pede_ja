@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load thumbnail %}
+
+{% block body %}
+    <div class="container is-fluid"> 
+            <h1 class="is-size-3 has-text-primary">Estabelecimentos</h1>
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        <form action="{% url 'register:establishment_search_list' %}" id="searchform" method="get">
+                            <div class="field">
+                                <div class="control has-icons-left">
+                                    <input type="text" id="searchbox" name="q" class="input" placeholder="Buscar Estabelecimentos">
+                                    <span class="icon is-left"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a class="button is-primary" href="{% url 'register:establishment_create' %}"> Cadastrar Novo </a>
+                    </div>
+                </div>
+            </div>
+        <div class="columns is-multiline">
+            {% for item in all_items %}
+                <div class="column is-half">
+                    <div class="card has-padding">
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="restaurant-card__avatar">
+                                    <img src="{{ item.logo_url|thumbnail_url:'dashboard_establishment_list_avatar' }}" alt="Restaurant Avatar">
+                                </div>
+                            </div>
+                            <div class="media-content">
+                                <h5 class="title is-5 has-half-margin">
+                                <a class="has-text-grey-dark has-text-weight-semibold" href="{% url 'register:establishment_dashboard' item.pk %}">{{item.name }}</a>
+                                </h5>
+                                <p class="has-text-grey">{{ item.cuisine_type}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+            <div class="columns">
+                <div class="column">
+                    {% include 'pagination.html' %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

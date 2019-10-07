@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Fazer pedido{% endblock %}
+
+{% block body %}
+    
+<div class="container is-fluid">
+
+    <div class="column is-full">
+        <h1 class="is-title is-size-3 has-text-primary">Pedidos » Fazer Pedido</h1>
+    </div>
+    
+    <div class="columns">
+        <div class="column is-one-third">
+            <form id="searchform">
+                <div class="control has-icons-left">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input class="input" id="searchbox" name="item-name" type="search" placeholder="Busque pelo nome do item">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="column is-full">
+        <div class="tabs">
+            <ul>
+                <li><a href="{% url 'register:list_items_to_order' establishment_id %}">Todos</a></li>
+            {% for category in categories %}
+                <li><a href="{% url 'register:list_items_to_order' establishment_id %}?category={{ forloop.counter }}">{{category.name}}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="box">
+        <h3 id="category-title" class="subtitle is-5 has-text-primary"></h3>
+        <table class="table is-fullwidth">
+        {% for menu_item in items %}
+            <tr>
+                <td>{{ menu_item.name }}</td>
+                <td><p class="has-text-weight-bold is-pulled-right">R$ {{ menu_item.price }}</p></td>
+                <td><a class="button is-primary is-outlined is-pulled-right" onclick="createOrder('{% url 'register:order_create' menu_item.pk %}')"> Pedir </a></td>
+       {% empty %}
+          Sem Pratos na lista
+            </tr>
+       {% endfor %}
+    </table>
+    </div>
+
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content"></div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+</div>
+{% endblock body %}
+
+{% block extra-js %}
+<script>
+
+    var confirm_order_url = "";
+
+    function createOrder(url){
+        
+        confirm_order_url = url;
+        
+         $.get(url, function(){
+        })
+            
+        .done(function(data){
+            $(".modal > .modal-content").html(data);
+            $(".modal").addClass("is-active");
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+            
+        .fail(function(xhr){
+        });
+        
+        $(".modal-close, .modal-background").click(function(){
+            $(this).parents(".modal").removeClass("is-active");
+        });
+    }
+    
+    function submitOrder(){
+        $.post(confirm_order_url, $('#order-form').serialize())
+        
+        .done(function (data) {
+            location.reload(); 
+        })
+    
+        .fail(function (xhr) {
+            console.log("Error: ", xhr);
+        });
+    }
+
+    function closeModal(event){
+        $(".modal").removeClass("is-active");
+    }
+    
+    
+    $("#searchform").submit(function (event) {
+        event.preventDefault();
+        
+        var path = window.location.pathname;
+        
+        var search = window.location.search;
+        
+        var query = $("#searchbox").val();
+        
+        if(search.includes("category")){
+            if(search.includes("item-name")){
+                search = location.search.split("&");
+                location.replace(path.concat(search[0] + "&item-name=" + query));    
+            } else {
+                location.replace(path.concat(search + "&item-name=" + query));  
+            }
+        } else {
+            location.replace(path.concat("?item-name=" + query));
+        }
+    });
+    
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null) {
+           return null;
+        }
+        return decodeURI(results[1]) || 0;
+    }
+
+    var category_id = $.urlParam("category");
+    
+    if(category_id != null) {
+        
+        var category_dom = $(".tabs ul li").get(category_id);
+    
+        $(category_dom).addClass("is-active");
+    
+        var category_title = category_dom.innerText;
+    
+        $("#category-title").text(category_title);
+        
+    } else {
+        $(".tabs ul li:first-child").addClass("is-active");
+        $("#category-title").text("Todas as categorias");
+    }
+
+</script>
+{% endblock %}

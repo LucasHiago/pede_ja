@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <h1> Detalhes do Pedido da Bill: {{order.bill.id}} </h1>
+  {% for order in bill %}
+      ID do Pedido: {{ order.id }}
+      {{ order.item.name }}
+      {{ order.quantity }}
+      {{ order.observation }}
+      {{ order.created_at }}
+      Preço R$: {{ order.total_price }}
+      {% if order.status == 'PENDING' or order.status == 'PREPARING'  %}
+          <a href="{% url 'register:order_kitchen_accepted_at' order.pk %}"> Alterar Status </a>
+      {% endif %}
+      {% if order.status == 'PREPARING' %}
+        <a href="{% url 'register:order_update' order.pk %}"> Alterar Pedido </a>
+      {% endif %}
+      {% if order.canceled_at != Null %}
+          Esse pedido foi cancelado às: {{ order.canceled_at|date:'g:i a' }}
+      {% elif order.kitchen_accepted_at != Null %}
+          Esse pedido foi aceito às: {{ order.kitchen_accepted_at|date:'g:i a' }}
+          <a href="{% url 'register:bill_payment_create' order.bill.pk %}"> Pay Bill Offline </a>
+      {% endif %}
+      <br></br>
+  {% endfor %}
+
+
+    <a href="{% url 'register:home' %}"> Início </a>
+
+{% endblock %}

@@ -1,0 +1,270 @@
+{% extends 'establishment_base.html' %}
+
+{% block title %}Cardápio{% endblock %}
+
+{% block content %}
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            <div class="columns is-multiline">
+                {% if not request.user.is_superuser %}
+                <div class="column is-full">
+                    <h1 class="is-title is-size-3 has-text-primary">Cardápio</h1>
+                </div>
+                {% endif %}
+                <div class="column is-14">
+                    <div class="level">
+                        <div class="level-left">
+                            <form id="searchform" action="{% url 'register:menu_item_list_search' establishment.id %}" method="get" accept-charset="utf-8">
+                                <div class="field is-horizontal">
+                                    <div class="level-item">
+                                        <p class="is-size-6">Filtrar:</p>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="level-item">
+                                            <div class="field">
+                                                <div class="select">
+                                                    <select name="categories">
+                                                        <option></option>
+                                                        {% for category in categories %}
+                                                            <option value={{category.id}}>{{category.name}}</option>
+                                                        {% empty %}
+                                                            <option value="">Sem categorias</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                  </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="level-item">
+                                            <div class="field has-addons">
+                                                <p class="control has-icons-left">
+                                                  <input name="item-name" type="search" class="input" placeholder="Busque pelo nome do item">
+                                                  <span class="icon is-small is-left">
+                                                    <i class="fas fa-search"></i>
+                                                  </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="buttons">
+                                    <button id="activate_obs" class="button is-link is-outlined">Observações</button>
+                                    <button id="activate_cat" class="button is-link is-outlined">Categorias</button>
+                                    <button id="activate_item" class="button is-link">Adicionar item</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-12">
+                    <div class="box">
+                        <div class="media menu_item">
+                            <div class="media-content">
+                                <p class="title is-5 has-text-weight-light has-text-primary">Pratos principais</p>
+                            </div>
+                        </div>
+                        {% for item in all_items %}
+                            <div class="media menu_item">
+                                <figure class="media-left image is-64x64">
+                                    {% if item.photo %}
+                                        <img src="{{item.photo.url}}" alt="" class="is-rounded">
+                                    {% else %}
+                                        <img src="https://via.placeholder.com/64" alt="" class="is-rounded">
+                                    {% endif %}
+                                </figure>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <strong>#{{item.id}} {{item.name}}</strong><br>
+                                            <small class="has-text-grey">Serve {{item.serve_up}} pessoa{{ item.serve_up|pluralize }}</small>
+                                            &nbsp;&nbsp;
+                                            <small class="has-text-grey">Tempo de preparo: {{item.preparation_time.minute}} min.</small><br>
+                                            <small>{{item.description}}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="media-right">
+                                    <div class="level">
+                                        <div class="level-right">
+                                            <div class="level-item">
+                                                <p><strong>R$ {{item.price}}</strong></p>
+                                            </div>
+                                            <div class="level-item">
+                                                <a id="edit-item-off" class="button icon has-text-grey-light" onclick="updateAction('{% url 'register:menu_item_update' item.pk %}', '{{ csrf_token }}')">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
+                                            </div>
+                                            <div class="level-item">
+                                                <a class="button icon has-text-grey-light" onclick="deleteAction('{% url 'register:menu_item_delete' item.pk %}', '{{ csrf_token }}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="media menu_item">
+                                <div class="media-content"><p>Sem itens.</p></div>
+                            </div>
+                        {% endfor %}
+                        {% if is_paginated %}
+                            {% include 'pagination.html' %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if request.resolver_match.url_name == "menu_item_list_search" %}
+                <div class="columns is-mobile">
+                    <div class="column">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <a class="button" href="{% url 'register:menu_item_list' establishment.id %}">Remover Filtro</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    
+{% endblock %}
+
+
+
+{% block extra-js %}
+<script>
+
+    $(document).ready(function(){
+        $('input#id_price').mask('000.000.000.000.000,00', {reverse: true});
+    });
+
+
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null) {
+           return null;
+        }
+        return decodeURI(results[1]) || 0;
+    }
+    
+    {% if request.resolver_match.url_name == "menu_item_list_search" %}
+        $('select[name=categories]').val($.urlParam('categories'));
+    {% endif %}
+    
+    $('select[name=categories]').change(function () {
+        $('form#searchform').submit();
+    })
+
+    var create_item_url = "{% url 'register:menu_create_item' establishment.id %}";
+    var create_category_url = "{% url 'register:menu_category_list' establishment.id %}";
+    var create_obs_url = "{% url 'register:menu_observation_list' establishment.id %}";
+
+    $("#activate_obs").click(function(){
+        $.get(create_obs_url, function(){
+        })
+        .done(function(data){
+            $(".modal > .modal-content").html(data);
+            $(".modal").addClass("is-active");
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+        .fail(function(xhr){
+        });
+    });
+
+    $("#activate_cat").click(function(){
+        $.get(create_category_url, function(){
+        })
+        .done(function(data){
+            $(".modal > .modal-content").html(data);
+            $(".modal").addClass("is-active");
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+        .fail(function(xhr){
+        });
+    });
+
+    $("#activate_item").click(function(){
+        $.get(create_item_url, function(){
+        })
+        .done(function(data){
+            $(".modal > .modal-content").html(data);
+            $(".modal").addClass("is-active");
+            $("#id_photo").change(function(){
+                swapThumb(this);
+            });
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+        .fail(function(xhr){
+        });
+    });
+
+    $("#edit-item").click(function(e){
+        e.preventDefault();
+        url = $(this).attr("href");
+        $.get(url, function(){
+        })
+        .done(function(data){
+            $(".modal > .modal-content").html(data);
+            thumbRefresh($(".modal > .modal-content input[type='file']"));
+            $("#id_photo").css({
+                'width': '0.1px',
+                'height': '0.1px',
+                'opacity': '0',
+                'overflow': 'hidden',
+                'position': 'absolute',
+                'z-index': '-1'
+            });
+            $("#dish_thumb").parent().addClass("is-pulled-right");
+        })
+        .fail(function(xhr){
+        });
+
+        $(".modal").addClass("is-active");
+    })
+    function thumbRefresh(input){
+        var src = $($(input).siblings("a")[0]).attr("href");
+        $("#dish_thumb").attr('src', src);
+    }
+
+
+    $(".modal-close, .modal-background").click(function(){
+        $(this).parents(".modal").removeClass("is-active");
+    });
+
+    function swapThumb(input){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+
+            reader.onload = function(e){
+                $("#dish_thumb").attr('src', e.target.result)
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+{% endblock %}

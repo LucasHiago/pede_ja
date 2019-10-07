@@ -1,0 +1,10 @@
+
+{% block body %}
+<section class="box" id="establishment_event_delete">
+        <form action="{% url 'register:events_delete' establishment_event.id  %}" method="POST">
+                {% csrf_token %}
+                <h3>Você tem certeza que deseja remover?</h3>
+                <button type="submit" class="button is-primary has-magt-2 is-complete">Sim</button>
+        </form>
+</section>
+{% endblock %}

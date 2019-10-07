@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block nav-top %}{% endblock %}
+
+
+
+{% block body %}
+<style>
+    .nav-left {
+        display: none;
+    }
+
+    body.has-nav-left {
+        padding-left: 0;
+    }
+
+    .noruh-permission {
+        position: fixed;
+        top: 50%;
+        margin-top: -193.04px;
+    }
+
+    .title-permission {
+        font-family: 'Source Sans Pro';
+        font-size: 28px;
+        color: rgba(67, 66, 93, 1);
+        line-height: 40px;
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+
+    .subtitle-permission {
+        font-family: 'Source Sans Pro';
+        margin-top: 5%;
+        font-size: 18px;
+        color: rgba(57, 60, 69, 1);
+        line-height: 18px;
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+
+    .btn-permission{
+        margin-top: 5%;
+        width: 87px;
+    }
+
+    button#btn_collapsed, button#btn_collapsing{
+        display:none;
+    }
+</style>
+<div class="Aligner">
+    <div class="Aligner-item noruh-permission  has-text-centered">
+        <img src="/static/dashboard-ui/imgs/marca_noruh-3x.png" alt="Noruh Logo" height="128" width="128">
+        <h1 class="title-permission"> Acesso não autorizado</h1>
+        <h2 class="subtitle-permission"> Você não tem autorização para acessar essa página. </h2>
+        <a href="{% url 'logout' %}" class="button is-primary btn-permission">Voltar</a>
+    </div>
+</div>
+
+{% endblock %}

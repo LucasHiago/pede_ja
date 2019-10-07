@@ -1,0 +1,160 @@
+{% extends 'components/establishment/establishment_component_base.html' %}
+
+
+{% block title %} Fotos {% endblock %}
+
+{% block buttons %}
+<a id="card-photos" href="{% url 'register:establishment_add_photo' establishment.id %}"> Adicionar nova Foto </a>
+{% endblock buttons %}
+
+{% block content %}
+
+<div class="media">
+    <div class="media-content">
+        <div class="columns is-multiline is-centered">
+            {% for photo in photos %}
+            <div class="column is-one-third">
+                <figure class="image is-2by1">
+                    <img id="{% if photo %}img-control{% endif %}" src="{{ photo.photo.url }}">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+
+                        <a class="tooltip" id="delete-photos" href="{% url 'register:establishment_delete_photo' photo.pk %}"><i
+                                class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+
+            <script>
+                    $("a#delete-photos").click(function (e) {
+                        e.stopImmediatePropagation(); // those pesky handlers
+                        e.preventDefault();
+                        url = this.href;
+            
+                        $.get(url, function () {
+                            console.log("Fetching data");
+                        })
+                            .done(function (data) {
+                                console.log("Data fetched succesfully :)");
+                                $(".modal.table_item > .modal-content").html(data);
+                                $(".modal.table_item").addClass("is-active");
+                                $(".modal .modal-content button.is-danger").click(function () {
+                                    $(".modal").removeClass("is-active");
+                                });
+                            })
+                            .fail(function (xhr) {
+                                console.log("Error: ", xhr);
+                            });
+            
+                        $(".modal-close, .modal-background").click(function () {
+                            $(".modal").removeClass("is-active");
+                        });
+                    });
+                </script>
+
+            {% empty %}
+
+            <div class="column is-one-third is-placeholder">
+                <figure class="image  is-2by1 placeholder-no-image">
+                    <p class="place-text">Adicionar Foto</p>
+                    <img src="/static/images/icon-gallery.png" alt="">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+                        <a class="tooltip" href="#"><i class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+            <div class="column is-one-third is-placeholder">
+                <figure class="image  is-2by1 placeholder-no-image">
+                        <p class="place-text">Adicionar Foto</p>
+                    <img src="/static/images/icon-gallery.png" alt="">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+                        <a class="tooltip" href="#"><i class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+            <div class="column is-one-third is-placeholder ">
+                <figure class="image  is-2by1 placeholder-no-image">
+                        <p class="place-text">Adicionar Foto</p>
+                    <img src="/static/images/icon-gallery.png" alt="">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+                        <a class="tooltip" href="#"><i class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+            <div class="column is-one-third is-placeholder ">
+                <figure class="image  is-2by1 placeholder-no-image">
+                        <p class="place-text">Adicionar Foto</p>
+                    <img src="/static/images/icon-gallery.png" alt="">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+                        <a class="tooltip" href="#"><i class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+            <div class="column is-one-third is-placeholder ">
+                <figure class="image  is-2by1 placeholder-no-image">
+                        <p class="place-text">Adicionar Foto</p>
+                    <img src="/static/images/icon-gallery.png" alt="">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+                        <a class="tooltip" href="#"><i class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+            <div class="column is-one-third is-placeholder ">
+                <figure class="image  is-2by1 placeholder-no-image">
+                        <p class="place-text">Adicionar Foto</p>
+                    <img src="/static/images/icon-gallery.png" alt="">
+                    <div class="has-btn-op is-outside is-remove-pic tooltip is-tooltip-left"
+                        data-tooltip="Remover Foto">
+                        <a class="tooltip" href="#"><i class="fas fa-trash-alt"></i></i></a>
+                    </div>
+                </figure>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+<div class="modal table_item">
+        <div class="modal-background"></div>
+        <div class="modal-content"></div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    
+    <script>
+        $("a#card-photos").click(function (e) {
+            e.stopImmediatePropagation(); // those pesky handlers
+            e.preventDefault();
+            url = this.href;
+
+            $.get(url, function () {
+                console.log("Fetching data");
+            })
+                .done(function (data) {
+                    console.log("Data fetched succesfully :)");
+                    $(".modal.table_item > .modal-content").html(data);
+                    $(".modal.table_item").addClass("is-active");
+                    $(".modal .modal-content button.is-danger").click(function () {
+                        $(".modal").removeClass("is-active");
+                    });
+                })
+                .fail(function (xhr) {
+                    console.log("Error: ", xhr);
+                });
+
+            $(".modal-close, .modal-background").click(function () {
+                $(".modal").removeClass("is-active");
+            });
+        });
+    </script>
+
+{% endblock content %}
+
+
+

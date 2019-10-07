@@ -1,0 +1,214 @@
+{% load load_permissions %}
+
+<nav class="nav-top">
+    <div class="columns">
+        <div class="column">
+            {% if not request.user.is_superuser %}
+            <div class="dropdown is-pulled-right" data-dropdown>
+                <div
+                    class="dropdown-trigger notification-n is-marginless {% for order in orders %} {% if forloop.first  %} show-count {% else %} {% endif %} {% endfor %} ">
+                </div>
+
+                <div id="dropdown-content" class="dropdown-menu">
+                    <div
+                        class="dropdown-content  {% for order in orders %}{% if forloop.counter|divisibleby:5  %} has-scroll {% endif %}{% endfor %}">
+
+                        <div id="TheOrder"></div>
+
+                        {% for order in orders %}
+                        <a
+                            href="{% url 'register:orders_list_kitchen_pending' request.user.employee.establishment.pk %}">
+                            <div id="content-dropdown-notify" class="dropdown-item ">
+                                <div class="level is-marginless is-paddingless">
+                                    <div class="level-left">
+                                        <p class="is-size-7">
+                                            {% if order.bill.table.name == 'order_remote' %}
+                                            Retirar no Balcao
+                                            {% else %}
+                                            {{ order.bill.table.name }}
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="level-right">
+                                        <p class="is-size-7"> #{{ order.id }}</p>
+                                    </div>
+                                </div>
+                                <p class="is-size-7 has-text-weight-normal">{{ order.item.name }}</p>
+                            </div>
+                        </a>
+                        <hr class="dropdown-divider">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div id="notify" class='notification is-primary is-inactive'><button id="delete" class='delete'></button>Novo pedido
+    adicionado!</div>
+
+<script src='https://code.jquery.com/jquery-2.2.0.min.js'></script>
+
+<script>
+
+
+    function CallNotificationPool() {
+        $('.notification-n').ready(function () {
+            var el = document.querySelector(".notification-n");
+            var count = Number(el.getAttribute("data-count")) || 0;
+            el.setAttribute("data-count", count);
+            el.classList.remove("notify");
+            el.offsetWidth = el.offsetWidth;
+            el.classList.add("notify");
+            if (count === 0) {
+                el.classList.add("show-count");
+            };
+        });
+
+        {% if request.user|permissions:"2" %}
+
+        $(document).ready(function () {
+            {% if request.user.is_superuser %}
+            {% elif request.user.manager %}
+            {% else %}
+            var href = "{% url 'register:orders_list_kitchen_pending' establishment.pk %}";
+            {% endif %}
+            $("#dropdown-content").load(href, function (data) {
+                $("#dropdown-content").html($($.parseHTML(data)).filter("#content-dropdown-notify"));
+                $("#dropdown-content").html($("#content-dropdown-notify").html());
+                $("#dropdown-content").html($("#dropdown-content").addClass("dropdown-fixed"));
+                $("#dropdown-content.dropdown-menu").css("right: 0 !important;top: 0.8rem !important;");
+            });
+        });
+
+        $(".dropdown").addClass("is-active");
+        $("#dropdown-content.dropdown-menu").css("right: 0 !important;top: 0.8rem !important;");
+
+        {% endif %}
+        StartNotificationCaller();
+    };
+
+
+    function CallNotification() {
+        $('.notification-n').ready(function () {
+            var el = document.querySelector(".notification-n");
+            var count = Number(el.getAttribute("data-count")) || 0;
+            el.setAttribute("data-count", count);
+            el.classList.remove("notify");
+            el.offsetWidth = el.offsetWidth;
+            el.classList.add("notify");
+            if (count === 0) {
+                el.classList.add("show-count");
+            };
+        });
+
+        {% if request.user|permissions:"2" %}
+
+        $(document).ready(function () {
+            {% if request.user.is_superuser %}
+            {% elif request.user.manager %}
+            {% else %}
+            var href = "{% url 'register:orders_list_kitchen_pending' establishment.pk %}";
+            {% endif %}
+            $("#dropdown-content").load(href, function (data) {
+                $("#dropdown-content").html($($.parseHTML(data)).filter("#content-dropdown-notify"));
+                $("#dropdown-content").html($("#content-dropdown-notify").html());
+                $("#dropdown-content").html($("#dropdown-content").addClass("dropdown-fixed"));
+                $("#dropdown-content.dropdown-menu").css("right: 0 !important;top: 0.8rem !important;");
+            });
+        });
+
+        $(".dropdown").addClass("is-active");
+        $("#dropdown-content.dropdown-menu").css("right: 0 !important;top: 0.8rem !important;");
+
+        {% elif request.user|permissions:"3" %}
+
+        $(document).ready(function () {
+            {% if request.user.is_superuser %}
+            {% elif request.user.manager %}
+            {% else %}
+            var href = "{% url 'register:orders_list' establishment.pk %}";
+            {% endif %}
+            /*$("#dropdown-content").load(href, function (data) {
+                $("#dropdown-content").html($($.parseHTML(data)).filter("#content-dropdown-notify"));
+                $("#dropdown-content").html($("#content-dropdown-notify").html());
+                $("#dropdown-content").html($("#dropdown-content").addClass("dropdown-fixed"));
+                $("#dropdown-content.dropdown-menu").css("right: 0 !important;top: 0.8rem !important;");
+            });*/
+        });
+
+        $(".dropdown").addClass("is-active");
+        $("#dropdown-content.dropdown-menu").css("right: 0 !important;top: 0.8rem !important;");
+
+        {% endif %}
+    };
+
+
+
+
+
+
+    function StartNotificationCaller() {
+        StartNotification();
+    }
+
+    function CallShowNavigation() {
+        setTimeout(function () {
+            $(".dropdown").addClass("is-active");
+        }, 650);
+        CallNotificationPool();
+    };
+
+    function CallNavigation() {
+        setTimeout(function () {
+            $(".dropdown").addClass("is-active");
+        }, 650);
+        CallNotification();
+    };
+
+
+
+    function StartNotify(Text) {
+        $(".notification").addClass('is-active');
+        $('#notify').html(Text + '<button class="delete"></button>');
+        $(".notification").removeClass('is-inactive');
+        CloseNotify();
+    }
+
+
+    function CloseNotify() {
+        setTimeout(function () {
+            $(".notification").removeClass('is-active');
+            $(".notification").addClass('is-inactive');
+            startRefresh();
+        }, 2850);
+    };
+
+
+
+    function startRefresh() {
+        $.get('#collapse-body', function (data) {
+            $(document.body).html(data);
+        });
+    }
+
+
+
+    function StartNotification() {
+        $(".notification").addClass('is-active');
+        $(".notification").removeClass('is-inactive');
+        CloseNotification();
+    }
+
+
+    function CloseNotification() {
+        setTimeout(function () {
+            $(".notification").removeClass('is-active');
+            $(".notification").addClass('is-inactive');
+            startRefresh();
+        }, 2850);
+    };
+
+</script>

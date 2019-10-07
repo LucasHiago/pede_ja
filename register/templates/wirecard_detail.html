@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="columns">
+	<div class="column is-10 is-offset-1">
+		<div class="columns is-multiline">
+			<div class="column is-full">
+				<div class="columns is-multiline has-magt-7">
+					<div class="card column is-full has-pad-3">
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<div class="level-item">
+									<label for="" class="label is-size-5 has-text-weight-normal has-text-primary">
+										{{ item.establishment.name }} >> Conta Wirecard
+									</label>
+								</div>
+							</div>
+							<div class="level-right">
+								<div class="level-item">
+									<button id="activate_obs" class="button is-link is-outlined">
+										<a href="{% url 'register:establishment_configurations' item.establishment.pk %}">Voltar</a>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Estabelecimento:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.establishment }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Id Wirecard:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.id_wirecard }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Login:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.login }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Access Token:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.access_token }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Canal ID:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.channel_id }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Tipo da Conta:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.type }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Email:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.email }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Nome Completo:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+									{{ item.name }}	{{ item.last_name }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Data de Nascimento:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.birth_date }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Número do CPF:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.number_cpf }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Endereço:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.street }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Número:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.street_number }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Distrito/Bairro:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.district }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">CEP:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.zip_code }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Cidade:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.city }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Estado:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.state }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Estado:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.state }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Telefone
+									{{ item.phone_type }}:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+									{{ item.country_code }} {{ item.area_code }} {{ item.number }}
+								</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">RG:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.number_rg }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Orgão Expedidor e Data:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+									{{ item.issuer }} - {{ item.issue_date }}
+								</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Wirecard criado em:</label>
+							</div>
+							<div class="level-right">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ item.created_at }}</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+										<a href="{{ item.link_account }}">Link para acesso ao Dashboard do Wirecard</a>
+									</label>
+							</div>
+						</div>
+						<div class="level is-border-bottom has-padb-2">
+							<div class="level-left">
+								<label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+										<a href="{{ item.set_password }}">Link para redefinir a senha no Dashboard do Moip</a>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>				
+{% endblock %}

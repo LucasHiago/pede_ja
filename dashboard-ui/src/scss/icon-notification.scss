@@ -1,0 +1,13 @@
+.icon-notification {
+  position: relative;
+
+  .icon.dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: .4em;
+    color: $red;
+    transform: translate(-50%, -40%);
+    border: 2px solid $white;
+  }
+}

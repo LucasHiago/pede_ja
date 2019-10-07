@@ -1,0 +1,98 @@
+{% extends 'establishment_base.html' %}
+{% load load_permissions %}
+
+{% block content %}
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="columns is-multiline">
+            {% if not request.user.is_superuser %}
+            <div class="column is-full">
+                <h1 class="is-size-3 has-text-primary">Ofertas</h1>
+            </div>
+            {% endif %}
+            <div class="column is-full">
+                <div class="level-right">
+                    <div class="level-item">
+                        <a id="card-offer" class="button is-primary" id="create_offer"
+                            href="{% url 'register:menu_offer_create' establishment.id %}">Adicionar Ofertas</a>
+                    </div>
+                </div>
+            </div>
+            {% for offer in all_items %}
+            <div class="column is-one-third">
+                <div class="card has-padding">
+                    <div class="media">
+                        <div class="media-item">
+                            <p class="is-size-4 has-text has-text-weight-bold">{{offer.name}}</p>
+                            <p class="has-text-grey-light">{{ offer.percentage }}% de desconto - {{ offer.category }}</p>
+                        </div>
+                        <div class="media-right">
+                            <a onclick="updateAction('{% url 'register:menu_offer_update' offer.pk %}', '{{ csrf_token }}')"
+                                class="button icon has-text-grey-light">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a onclick="deleteAction('{% url 'register:menu_offer_delete' offer.pk %}', '{{ csrf_token }}')"
+                                class="button icon has-text-grey-light">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="column is-one-third">
+                <div class="box">
+                    <h2 class="has-text-danger is-size-4">Sem Ofertas Cadastradas</h2>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<div class="modal table_item">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+<script>
+
+
+    $(document).ready(function () {
+        $('input#id_discount').mask('0.00', { decimal: '.', thousands: '', precision: 2 });
+    });
+
+
+
+    $("a#card-offer").click(function (e) {
+        e.stopImmediatePropagation(); // those pesky handlers
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+</script>
+
+{% endblock %}

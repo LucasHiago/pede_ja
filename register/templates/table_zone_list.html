@@ -1,0 +1,121 @@
+{% extends 'establishment_base.html' %}
+
+{% load static %}
+
+{% block title %}Mesas{% endblock %}
+
+{% block content %}
+<div class="columns">
+  <div class="column is-10 is-offset-1">
+    <div class="columns is-multiline">
+      <div class="column is-full">
+        <div class="level">
+          <div class="level-left">
+            {% if not request.user.is_superuser %}
+            <div class="level-item">
+              <h1 class="is-size-3 has-text-primary">Mesas</h1>
+            </div>
+            {% endif %}
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <a id="card-zone" href="{% url 'register:table_zone_create' establishment.id %}"
+                class="button is-primary is-pulled-right">Adicionar Zona</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% for table_zone in all_items %}
+      <div class="column is-one-third">
+        {% include 'establishment_zone_card.html' %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="modal table_item_zone">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+{% comment %}
+{% for table_zone in all_items %}
+{% for table in table_zone.tables_from_table_zone %}
+<p><a
+    href="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=open_bill:{{ table.establishment.id }}:{{ table.id }}">
+    QR Code </a></p>
+<p><a id="card-zone-active" href="{% url 'register:table_update_enabled' table.pk %}"> Ativar Mesa </a></p>
+<p><a id="card-zone-update" href="{% url 'register:table_update' table.pk %}"> Alterar Mesa </a></p>
+<p><a id="card-zone-delete" href="{% url 'register:table_delete' table.pk %}"> Excluir Mesa </a></p>
+{% endfor %}
+{% endfor %}
+{% endcomment %}
+
+{% comment %}
+{% for table_zone in all_items %}
+{% for table in table_zone.tables_from_table_zone %}
+<p><a
+    href="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=open_bill:{{ table.establishment.id }}:{{ table.id }}">
+    QR Code </a></p>
+<p><a id="card-zone-active"  href="{% url 'register:table_update_enabled' table.pk %}"> Ativar Mesa </a></p>
+<p><a id="card-zone-update"  href="{% url 'register:table_update' table.pk %}"> Alterar Mesa </a></p>
+<p><a id="card-zone-delete" href="{% url 'register:table_delete' table.pk %}"> Excluir Mesa </a></p>
+{% endfor %}
+{% endfor %}
+{% endcomment %}
+
+{% endblock %}
+
+{% block extra-js %}
+<script>
+  $("a#card-zone").click(function (e) {
+    e.preventDefault();
+    url = this.href;
+
+    $.get(url, function () {
+      console.log("Fetching data");
+    })
+      .done(function (data) {
+        console.log("Data fetched succesfully :)");
+        $(".modal.table_item_zone > .modal-content").html(data);
+        $(".modal.table_item_zone").addClass("is-active");
+        $(".modal .modal-content button.is-danger").click(function () {
+          $(".modal").removeClass("is-active");
+        });
+      })
+      .fail(function (xhr) {
+        console.log("Error: ", xhr);
+      });
+
+    $(".modal-close, .modal-background").click(function () {
+      $(".modal").removeClass("is-active");
+    });
+    e.stopImmediatePropagation(); // those pesky handlers
+  });
+
+  $(document).ready(function () {
+    $(".delete-button").click(function () {
+
+      $.get(url, function () {
+      })
+
+        .done(function (data) {
+          $(".modal.table_item_zone > .modal-content").html(data);
+          $(".modal.table_item_zone").addClass("is-active");
+          $(".modal .modal-content button.is-danger").click(function () {
+            $(".modal").removeClass("is-active");
+          });
+        })
+        .fail(function (xhr) {
+        });
+
+      $(".modal-close, .modal-background").click(function () {
+        $(".modal").removeClass("is-active");
+      });
+    })
+  })
+
+</script>
+{% endblock extra-js %}

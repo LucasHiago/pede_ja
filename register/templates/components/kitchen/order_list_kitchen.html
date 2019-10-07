@@ -1,0 +1,157 @@
+{% extends 'establishment_base.html' %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load static %}
+{% load bulma_tags leaflet_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block extra-css %}
+{% leaflet_css plugins="forms" %}
+{% endblock %}
+
+{% block extra-js %}
+{% leaflet_js plugins="forms" %}
+{% endblock %}
+
+
+{% load load_permissions %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block body %}
+
+{% include 'base_topnav.html' %}
+
+{% include './navigation_in_kitchen.html' %}
+
+<link rel="stylesheet" href="/static/bulma-accordion.min.css">
+
+<div class="container is-fluid">
+  {% if request.resolver_match.url_name == "orders_list_kitchen_pending" or request.resolver_match.url_name == "orders_kitchen_category_filter" %}
+  <form id="filter-orders-by-category" action="{% url 'register:orders_kitchen_category_filter' establishment.id %}"
+    method="get" accept-charset="utf-8">
+    <div class="columns check-box-off">
+      <section class="accordions">
+        <article class="accordion">
+          <div class="accordion-header togle">
+            <p class="">Filtre por uma Categoria</p>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+
+              <div class="column ">
+                {% for category in categories %}
+                <div class="columns is-2 left">
+                  <div class="left">
+                    <div class="item">
+                      <label class="toggle">
+                        <input type="checkbox" name="category" class="toggle__input" id="check-{{category.id}}"
+                          value="{{category.id}}">
+                        <span class="toggle__label">
+                          <span class="toggle__text"></span>
+                        </span>
+                      </label>
+                      <label for="check-{{category.id}}" class="label has-text-weight-light">{{category.name}}</label>
+                    </div>
+                  </div>
+                </div>
+                {% empty %}
+                <label class="subtitle is-6">Sem Categorias</label>
+                {% endfor %}
+              </div>
+
+              {% if request.resolver_match.url_name == "orders_kitchen_category_filter" %}
+              <div class="subtitle is-6"> Filtrando por:
+                {% for category in categories_filter %}
+                {{ category.name }}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <div class="columns">
+                  <div class="column is-2 left-mobile">
+                    <button type="submit" form="filter-orders-by-category" value="submit" class="button">Filtrar</a>
+                  </div>
+                  <div class="column is-2 left-mobile">
+                    {% if request.resolver_match.url_name == "orders_kitchen_category_filter" %}
+                    <a class="button" href="{% url 'register:orders_list_kitchen_pending' establishment.id %}">Remover Filtro</a>
+                    {% endif %}
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </form>
+  {% endif %}
+  <div class="columns is-multiline on-ipad">
+    {% for order in orders %}
+    {% if request.resolver_match.url_name == "orders_kitchen_category_filter" %}
+    {% for category in category_filter %}
+    {% if order.category.id == category.id %}
+    {% include './orders_card_categories.html' %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% include './orders_card.html' %}
+    {% endfor %}
+  </div>
+</div>
+</div>
+
+<audio id="KitchenNewCardAudio">
+  <source src="/static/songs/notification-song.mp3" type="audio/mpeg">
+  <source src="/static/songs/notification-song.ogg" type="audio/ogg">
+</audio>
+
+<script type="text/javascript" src="/static/bulma-accordion.min.js"></script>
+
+<script>
+
+  var accordions = bulmaAccordion.attach();
+
+  function CallNewCard() {
+    var url = window.location.href;
+    $(document).ready(function (e) {
+      //$("#kitchen-cards").load(url + " #kitchen-cards:first-child");
+      $(".columns.is-multiline").load(url + " .columns.is-multiline");
+      $(".columns.is-multiline").addClass('in-ipad');
+      $(".columns.is-multiline").removeClass('on-ipad');
+    });
+    PlayTheSound();
+    //event.stopPropagation();
+  }
+
+  function PlayTheSound() {
+    var KitchenNewCardAudio = document.getElementById("KitchenNewCardAudio");
+    KitchenNewCardAudio.play();
+    CallShowNavigation();
+  }
+
+
+  function PlaySound() {
+    var KitchenNewCardAudio = document.getElementById("KitchenNewCardAudio");
+    KitchenNewCardAudio.play();
+    CallNavigation();
+  }
+
+  {% for category in categories %}
+
+  $(function () {
+    $('input#check-{{category.id}}').change(function () {
+      if ($(this).is(':checked')) {
+        $('span#check-{{category.id}}').addClass('visible');
+      } else {
+        $('span#check-{{category.id}}').removeClass('visible');
+      }
+    });
+  });
+
+  {% endfor %}
+
+</script>
+
+{% endblock %}

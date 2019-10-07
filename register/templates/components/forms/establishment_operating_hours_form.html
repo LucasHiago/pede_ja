@@ -1,0 +1,65 @@
+
+{% load bulma_tags %}
+
+<section class="box" id="establishment_hour_create_update">
+  <h1 class="title is-4 has-text-primary has-text-weight-light">Criar Novo Horário</h1>
+  <form action="{% url 'register:operating_hour_create' establishment.pk %}" method="POST">
+    {% csrf_token %}
+    <div class="field">
+        <label class="label">Horário que abre</label>
+        <div class="control">
+            <input type="time" name="opening_time" class="input" required="" id="id_opening_time">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Horário que abre</label>
+        <div class="control">
+            <input type="time" name="closing_time" class="input" required="" id="id_closing_time">
+        </div>
+    </div>
+    {{ form.dow|bulma }}
+    <button type="submit" class="button is-primary has-magt-2 is-complete">Salvar</button>
+</form>
+</section>
+
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+<script>
+  $(document).on('submit', 'establishment_hour_create_update', function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: '{% url 'register:operating_hour_create' establishment.pk %}',
+      data: {
+        'opening_time': $('#id_opening_time').val(),
+        'closing_time': $('#id_closing_time').val()
+      },
+      statusCode: {
+        406: function(data) {
+          console.log(data);
+          {% if form_error == true %}
+
+            let validateValues = data.responseText;
+
+            $("#warn").addClass('is-active');
+            $("#warn").removeClass('is-inactive');
+            $("#warn").append('<p> O campo está com problemas: '+validateValues+'</p>');
+
+          {% else %}
+
+          {% endif %}
+        },
+        200: function() {
+          console.log("sucesso");
+          $(".modal").removeClass("is-active");
+        }
+      }
+    });
+  });
+
+    $(document).ready(function () {
+        $('input#id_opening_time').mask('00:00');
+        $('input#id_closing_time').mask('00:00');
+    });
+</script>

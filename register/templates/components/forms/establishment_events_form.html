@@ -1,0 +1,11 @@
+{% load bulma_tags %}
+
+<section class="box" id="establishment_event_update_form">
+  <h1 class="title is-4 has-text-primary has-text-weight-light has-text-centered">Criar Novo Evento</h1>
+  <form action="{% url 'register:events_create' establishment.id %}" method="POST">
+    {% csrf_token %}
+    {{ form.description|bulma }}
+    {{ form.date|bulma }}
+    <button type="submit" class="button is-primary has-magt-2 is-complete">Salvar</button>
+  </form>
+</section>

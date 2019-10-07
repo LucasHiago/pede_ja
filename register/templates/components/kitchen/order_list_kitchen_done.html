@@ -1,0 +1,101 @@
+{% extends 'establishment_base.html' %}
+
+{% load load_permissions %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block body %}
+
+{% include './navigation_in_kitchen.html' %}
+
+<div class="columns is-marginless">
+    <div class="column is-10 is-offset-1">
+        <div class="level">
+            <div class="level-left">
+                <form action="{% url 'register:orders_kitchen_done_search_table' establishment.id %}" id="searchform">
+                    <div class="field is-horizontal">
+                        <div class="level-item">
+                            <p class="is-size-6"></p>
+                        </div>
+                        <div class="field-body has-magr-2">
+                            <div class="field">
+                                <div class="level-item">
+                                    <div class="select">
+                                        <select name="table">
+                                            {% for table in tables %}
+                                                <option value={{table.id}}>
+                                                    {% if table.name == 'order_remote' %}
+                                                        Retirar no Balcao
+                                                    {% else %}
+                                                        {{ table.name }}
+                                                    {% endif %}                                           
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="{% url 'register:orders_kitchen_done_search_user' establishment.pk %}"
+                            id="searchform" method="get">
+                            <div class="field">
+                                <div class="control has-icons-left">
+                                    <input type="text" id="searchbox" name="q" class="input"
+                                        placeholder="Buscar pelo Nome do Usuário">
+                                    <span class="icon is-left"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </form>
+            </div>
+            <div class="level-right">
+                <button type="submit" name="myButton" class="button is-primary" value="foo">Buscar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="columns is-multiline">
+            <div class="column is-full">
+                <div class="box">
+                    <h3 class="subtitle is-5 has-text-primary">Pedidos</h3>
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <th>QTD</th>
+                            <th>Item</th>
+                            <th>N do Pedido</th>
+                            <th>Mesa</th>
+                            <th>Usuario</th>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>{{order.quantity}}</td>
+                                    <td>{{order.item.name}}</td>
+                                    <td>#{{order.id}}</td>
+                                    <td>{{order.bill.table}}</td>
+                                    <td>{{order.user.first_name}}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>Sem Pedidos</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if is_paginated %}
+                        {% include 'pagination.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>            
+
+{% endblock %}

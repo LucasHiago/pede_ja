@@ -1,0 +1,10 @@
+
+{% load bulma_tags %}
+
+<section class="box" id="establishment_box_photo_update">
+    <form action="{% url 'register:establishment_add_photo' establishment.id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|bulma }}
+        <button type="submit" class="button is-primary has-magt-2 is-complete">Salvar</button>
+    </form>
+</section>

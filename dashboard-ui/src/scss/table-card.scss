@@ -1,0 +1,36 @@
+.table-card {
+  $p: &;
+
+  &__number {
+    $size: 5rem;
+
+    position: relative;
+    width: $size;
+    height: $size;
+    background: $grey;
+    border-radius: ($size / 2);
+    overflow: hidden;
+
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      color: $white;
+      font-size: 1.5rem;
+    }
+  }
+
+  &--available {
+    #{$p}__number {
+      background-color: #1dd1a1;
+    }
+  }
+
+  &--unavailable {
+    #{$p}__number {
+      background-color: #ff7675;
+    }
+  }
+}

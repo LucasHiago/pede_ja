@@ -1,0 +1,100 @@
+{% extends 'establishment_base.html' %}
+
+{% block title %}Contas Fechadas{% endblock %}
+
+{% block content %}
+<div class="container is-fluid">
+    <div class="columns is-multiline">
+        {% if not request.user.is_superuser %}
+          <div class="column is-full">
+            <h1 class=" is-size-3 has-text-primary">Contas Fechadas </h1>
+          </div>
+        {% endif %}
+        <div class="column is-full">
+        </div>
+            {% include 'bills_navigation_tab.html' %}
+        </div>
+        <div class="column is-three-fifths">
+          <form id="month-filter-form" action="{% url 'register:bill_search_list_closed' establishment.id %}" method="get" accept-charset="utf-8">
+            <label class="subtitle is-7">Filtrar por mês:</label>
+            <div class="select is-small">
+              <select name="month-filter">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+            {% if request.resolver_match.url_name == "bill_search_list_closed" %}
+              <a class="button" href="{% url 'register:bill_list_closed' establishment.id %}">Remover Filtro</a>
+            {% endif %}
+          </form>
+        </div>
+          <div class="box">
+            <table class="table is-fullwidth is-striped">
+              <thead>
+                <th>Conta</th>
+                <th>Mesa</th>
+                <th>Quantidade de Membros</th>
+                <th>Data de Pagamento</th>
+                <th>Valor Pago</th>
+                <th>Tipo do Pagamento</th>
+              </thead>
+              <tbody>
+                {% for payment in bills_payment %}
+                  <tr>
+                    <td>#{{payment.bill.id}}</td>
+                    <td>
+                      {% if payment.bill.table.name == 'order_remote' %}
+                          Retirar no Balcao
+                      {% else %}
+                          {{ payment.bill.table.name }}
+                      {% endif %}
+                    </td>
+                    <td>{{payment.bill.number_of_customers}}</td>
+                    <td>{{payment.date}}</td>
+                    <td>R${{payment.value}}</td>
+                    <td>
+                      {% if payment.status_payment == payment.STATUS_AUTHORIZED %}
+                        {{payment.credit_card.brand_card.capitalize}} {{payment.credit_card.last_four_digits}}
+                      {% elif payment.status_payment == payment.STATUS_OFFLINE_APPROVED %}
+                        Pagamento Offline
+                      {% elif payment.status_payment == payment.STATUS_CANCELLED %}
+                        Pagamento Recusado pelo Moip
+                      {% elif payment.status_payment == payment.STATUS_OFFLINE_CANCELLED %}
+                        Pagamento Recusado
+                      {% endif %}
+                    </td>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% if is_paginated %}
+                {% include 'pagination.html' %}
+            {% endif %}
+          </div>
+        </div>
+  </div>
+</section>
+
+<script>
+
+    // Filtering by month
+
+    $('select[name=month-filter]').val("{{ month_name }}");
+
+    $('select[name=month-filter]').change(function () {
+        $('form#month-filter-form').submit();
+    })
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'components/establishment/establishment_component_base.html' %}
+
+{% block title %}
+Promocode
+{% endblock %}
+
+{% block buttons %}
+<a id="card-promocode" href="{% url 'register:promocode_create' establishment.id %}"> Novo Promocode </a>
+{% endblock buttons %}
+
+{% block content %}
+
+
+{% for promocode in promocodes %}
+<div id="switch-in-promo" class="level is-border-bottom-c has-padb-2">
+  <div class="level-left is-min-width-150">
+    {{ promocode.promocode }}
+  </div>
+
+  {% if promocode.enabled %}
+  <div class="level-item has-text-centered is-min-width-150">
+    <label id="promotext-{{ promocode.pk }}" for=""
+      class="label is-size-6 has-text-weight-normal has-text-tertiary">Ativo</label>
+  </div>
+  <div class="level-item has-text-centered ">
+    <div class="onoffswitch">
+      <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox"
+        id="promocodeswicth-{{promocode.pk}}" checked>
+      <label class="onoffswitch-label" for="promocodeswicth-{{promocode.pk}}"></label>
+    </div>
+  </div>
+  {% else %}
+  <div class="level-item has-text-centered is-min-width-150">
+    <label id="promotext-{{ promocode.pk }}" for=""
+      class="label is-size-6 has-text-weight-normal has-text-tertiary">Ativo</label>
+  </div>
+
+  <div class="level-item has-text-centered ">
+    <div class="onoffswitch">
+      <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox"
+        id="promocodeswicth-{{promocode.pk}}">
+      <label class="onoffswitch-label" for="promocodeswicth-{{promocode.pk}}"></label>
+    </div>
+  </div>
+  {% endif %}
+
+  <a id="modalclose-{{promocode.pk}}" href="{% url 'register:promocode_delete' promocode.pk %}"
+    class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+  </a>
+
+</div>
+{% endfor %}
+
+{% for promocode in promocodes %}
+<script>
+  {% if promocode.enabled %}
+
+  $("#promotext-{{ promocode.pk }}").each(function () { this.innerText = "Ativo"; });
+  $("input#promocodeswicth-{{ promocode.pk }}").each(function () { this.checked = true; });
+  CheckPromoSwitch();
+
+  {% else %}
+
+  $("#promotext-{{ promocode.pk }}").each(function () { this.innerText = "Inativo"; });
+  $("input#promocodeswicth-{{ promocode.pk }}").each(function () { this.checked = false; });
+  CheckPromoSwitch();
+
+  {% endif %}
+
+
+  function CheckPromoSwitch() {
+    $("#promocodeswicth-{{ promocode.pk }}").change(function () {
+      if ($("#promocodeswicth-{{ promocode.pk }}").prop('checked') == true) {
+        $("#promotext-{{ promocode.pk }}").each(function () { this.innerText = "Ativo"; });
+      } else {
+        $("#promotext-{{ promocode.pk }}").each(function () { this.innerText = "Inativo"; });
+      }
+    });
+  }
+
+  $("#promocodeswicth-{{ promocode.pk }}").click(function (e) {
+
+    $.ajax({
+      url: "{% url 'register:promocode_update' promocode.pk %}",
+      method: "GET"
+    })
+      .done(function (data) {
+        if (data.opened) {
+          console.log('success', data);
+
+        } else {
+
+        }
+      })
+      .fail(function (xhr) {
+        console.log('error', xhr);
+      });
+    e.stopImmediatePropagation();
+  });
+
+  $("a#modalclose-{{promocode.pk}}").click(function (e) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    url = this.href;
+
+    $.get(url, function () {
+
+    })
+      .done(function (data) {
+
+        $(".modal.table_item > .modal-content").html(data);
+        $(".modal.table_item").addClass("is-active");
+        $(".modal .modal-content button.is-danger").click(function () {
+          $(".modal").on();
+          $(".modal").removeClass("is-active");
+        });
+      })
+      .fail(function (xhr) {
+        console.log("Error: ", xhr);
+      });
+
+    $(".modal-close, .modal-background").click(function () {
+      $(".modal").removeClass("is-active");
+    });
+  });
+</script>
+
+{% endfor %}
+
+<div class="modal table_item">
+  <div class="modal-background"></div>
+  <div class="modal-content"></div>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<script>
+
+  $("a#card-promocode").click(function (e) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    url = this.href;
+
+    $.get(url, function () {
+
+    })
+      .done(function (data) {
+
+        $(".modal.table_item > .modal-content").html(data);
+        $(".modal.table_item").addClass("is-active");
+        $(".modal .modal-content button.is-danger").click(function () {
+          $(".modal").on();
+          $(".modal").removeClass("is-active");
+        });
+      })
+      .fail(function (xhr) {
+        console.log("Error: ", xhr);
+      });
+
+    $(".modal-close, .modal-background").click(function () {
+      $(".modal").removeClass("is-active");
+    });
+  });
+
+</script>
+
+{% endblock content %}

@@ -1,0 +1,137 @@
+<div class="card table-zone">
+        <header class="card-header table-zone-cards-header">
+        <p class="card-header-title is-size-6 has-text-weight-normal has-text-primary">
+            {% if 'order_remote' in table_zone.name %}
+                Retirar no Balcao
+            {% else %}
+                {{ table_zone.name }}
+            {% endif %}
+        </p>
+        <div class="dropdown is-hoverable is-right is-up">
+            <div class="dropdown-trigger">
+            <a aria-haspopup="true" aria-controls="dropdown-menu-{{table_zone.pk}}">
+                <span class="icon is-large has-text-grey-light"><i class="fas fa-lg fa-ellipsis-h" aria-hidden="true"></i></span>
+            </a>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu-{{table_zone.pk}}" role="menu">
+            <div class="dropdown-content">
+                <a id="card-zone-update" class="dropdown-item" onclick="updateAction('{% url 'register:table_zone_update' table_zone.pk %}', '{{ csrf_token }}')"> Editar </a>
+                <a id="card-zone-delete" class="dropdown-item" onclick="deleteAction('{% url 'register:table_zone_delete' table_zone.pk %}', '{{ csrf_token }}')"> Excluir </a>
+            </div>
+            </div>
+        </div>
+        </header>
+        <div class="card-content table-zone-cards">
+        {% for table in table_zone.tables_from_table_zone %}
+            <div class="level">
+                <div class="level-item is-fixed">
+                    <span class="icon">
+                        {% if not table.enabled %}
+                            <i class="fas fa-circle has-grey-icon"></i>
+                        {% elif not table.is_available %}
+                            <i class="fas fa-circle has-text-danger"></i>
+                        {% else %}
+                            <i class="fas fa-circle has-text-success"></i>
+                        {% endif %}
+                    </span>
+                    <p>
+                        {% if table.name == 'order_remote' %}
+                            Retirar no Balcao
+                        {% else %}
+                            {{ table.name }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="level-item has-text-centered">
+                    <a href="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=open_bill:{{ table.establishment.id }}:{{ table.id }}" target="_blank" class="icon">
+                        <i class="fas fa-qrcode"></i>
+                    </a>
+                </div>
+                <div class="level-item has-text-centered is-end">
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="table-zone-switch-{{table.id}}">
+                        <label class="onoffswitch-label" for="table-zone-switch-{{table.id}}"></label>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        <div class="card-footer is-bottom">
+            <div class="card-footer-item is-centered">
+                <a id="card-zone-active" onclick="createTable('{% url 'register:table_create' table_zone.id establishment.id %}')" class="button is-outlined is-primary">Adicionar Mesa</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+     function createTable(url){
+            $.get(url, function(){
+            })
+                
+            .done(function(data){
+                $(".modal > .modal-content").html(data);
+                $(".modal").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function(){
+                    $(".modal").removeClass("is-active");
+                });
+                
+                $("form#create-table").submit(function (event) {
+                    event.preventDefault();
+                    
+                    $.post(url, $('#create-table').serialize())
+                
+                    .done(function (data) {
+                        location.reload(); 
+                    })
+                
+                    .fail(function (xhr) {
+                        console.log("Error: ", xhr);
+                    });      
+                })
+            })
+                
+            .fail(function(xhr){
+                alert("Failed");
+            });
+            
+            $(".modal-close, .modal-background").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        }
+
+        {% for table in table_zone.tables_from_table_zone %}
+
+            {% if table.enabled %}
+                $('#table-zone-switch-{{table.id}}').each(function(){ this.checked = true; });
+            {% else %}
+                $('#table-zone-switch-{{table.id}}').each(function(){ this.checked = false; });
+            {% endif %}
+            
+            $("#table-zone-switch-{{table.id}}").click(function(e){
+                
+                $.ajax({
+                    url: "{% url 'register:table_update_enabled' table.id %}",
+                    method: "GET"
+                     })
+                    .done(function(data){
+                        console.log(data);
+                        if(data.enabled){
+                            $('#table-zone-switch-{{table.id}}').each(function(){ this.checked = true; });    
+                        } else {
+                            $('#table-zone-switch-{{table.id}}').each(function(){ this.checked = false; });      
+                        }
+                    })
+                    .fail(function(xhr){
+                        console.log('error', xhr);
+                    });
+                    e.stopImmediatePropagation();
+            });
+            
+        {% endfor %}
+    
+    </script>
+
+
+
+

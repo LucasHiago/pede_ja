@@ -1,0 +1,25 @@
+<div class="columns is-multiline has-magt-2 has-magb-2">
+  <div class="card column is-full has-pad-3">
+    <div class="level is-border-bottom has-padb-2">
+      <div class="level-left">
+        <div class="level-item">
+          <label for=""
+            class="label is-size-5 has-text-weight-normal has-text-primary">{% block title %}{% endblock %}</label>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <!-- CALL OFF
+                        <button id="activate_obs" class="button is-link is-outlined">
+                            {% block buttons %}{% endblock buttons %}
+                        </button>
+                        -->
+        </div>
+      </div>
+    </div>
+
+    {% block content %}
+    {% endblock content %}
+
+  </div>
+</div>

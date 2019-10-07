@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load bulma_tags leaflet_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block extra-css %}
+{% leaflet_css plugins="forms" %}
+{% endblock %}
+
+{% block extra-js %}
+{% leaflet_js plugins="forms" %}
+{% endblock %}
+
+{% block body %}
+<section class="bg-white">
+  <div class="column is-10 is-offset-1">
+    <p class="is-size-3 has-text-primary">Novo Estabelecimento</p>
+  </div>
+  <div class="column is-10 is-offset-1 box">
+    <div class="columns is-multiline has-pad-3">
+      <div class="column is-half">
+        <form method="POST" enctype="multipart/form-data">
+          <p class="title is-4 has-text-primary has-text-weight-light">Informações</p>
+          {% csrf_token %}
+          <div class="column is-one-fifth">
+            <div class="field">
+              <label for="{{form.logo_url.id_for_label}}" class="label image is-96x96" style="cursor:pointer;">
+                <img id="dish_thumb" src="{% static "images/icon-gallery.png" %}" alt="">
+              </label>
+              <div class="control image-employee">
+                {{form.logo_url|bulma}}
+              </div>
+            </div>
+          </div>
+          <div class="field name-establishment">
+            {{form.name|bulma}}
+          </div>
+          <div class="field description-establishment">
+            {{form.description|bulma}}
+          </div>
+          <div class="field address-description">
+            {{form.address|bulma}}
+          </div>
+          <div class="field map-description">
+            {{form.geo_loc|bulma}}
+          </div>
+      </div>
+      <div class="column">
+        <p class="title is-4 has-text-primary has-text-weight-light">Configurações</p>
+        <div class="field cuisine-description">
+          {{form.cuisine_type|bulma}}
+        </div>
+        <!--TOGGLES-->
+        <div class="columns">
+          <div class="column is-one-third">
+            <div class="level toggle-description">
+              <div class="level-left">
+                <div class="level-item">
+                  <label class="toggle">
+                    {% render_field form.enabled class="toggle__input" %}
+                    <span class="toggle__label">
+                      <span class="toggle__text"></span>
+                    </span>
+                  </label>
+                </div>
+                <div class="level-item">
+                  <label for="{{form.enabled.id_for_label}}" class="label has-text-weight-light">Ativo</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-one-third">
+            <div class="level toggle-description">
+              <div class="level-left">
+                <div class="level-item">
+                  <label class="toggle">
+                    {% render_field form.opened class="toggle__input" %}
+                    <span class="toggle__label">
+                      <span class="toggle__text"></span>
+                    </span>
+                  </label>
+                </div>
+                <div class="level-item">
+                  <label for="{{form.opened.id_for_label}}" class="label has-text-weight-light">Aberto</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-one-third">
+            <div class="level toggle-description">
+              <div class="level-left">
+                <div class="level-item">
+                  <label class="toggle">
+                    {% render_field form.pays_payment_tax class="toggle__input" %}
+                    <span class="toggle__label">
+                      <span class="toggle__text"></span>
+                    </span>
+                  </label>
+                </div>
+                <div class="level-item">
+                  <label for="{{form.pays_payment_tax.id_for_label}}" class="label has-text-weight-light">Taxa de
+                    Pagamento</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-one-third">
+            <div class="level toggle-description">
+              <div class="level-left">
+                <div class="level-item">
+                  <label class="toggle">
+                    {% render_field form.gps_restriction class="toggle__input" %}
+                    <span class="toggle__label">
+                      <span class="toggle__text"></span>
+                    </span>
+                  </label>
+                </div>
+                <div class="level-item">
+                  <label for="{{form.gps_restriction.id_for_label}}" class="label has-text-weight-light">Pedidos a
+                    Distância</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-one-third">
+            <div class="level toggle-description">
+              <div class="level-left">
+                <div class="level-item">
+                  <label class="toggle">
+                    {% render_field form.featured class="toggle__input" %}
+                    <span class="toggle__label">
+                      <span class="toggle__text"></span>
+                    </span>
+                  </label>
+                </div>
+                <div class="level-item">
+                  <label for="{{form.featured.id_for_label}}" class="label has-text-weight-light">Destaque</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END TOGGLES-->
+        <div class="field cuisine-description">
+          {{form.amenities|bulma}}
+        </div>
+        <div class="columns">
+          <div class="column is-half field name-establishment">
+            {{form.noruh_fee|bulma}}
+          </div>
+          <div class="column is-half field name-establishment">
+            {{form.moip_fee|bulma}}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-half field name-establishment">
+            {{form.payment_tax|bulma}}
+          </div>
+          <div class="column is-half field name-establishment">
+            {{form.taxe_service|bulma}}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-half field name-establishment">
+            {{form.taxe_couvert|bulma}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="column is-two-fifths has-margin-auto">
+      <button type="submit" class="button is-primary has-in-center is-complete">Salvar</button>
+    </div>
+  </div>
+
+
+
+  </form>
+  </div>
+</section>
+{% endblock %}

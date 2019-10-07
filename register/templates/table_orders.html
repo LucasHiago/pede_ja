@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            <div class="columns is-multiline">
+                <div class="column is-full">
+                    <h1 class="is-title is-size-3 has-text-primary">Contas</h1>
+                </div>
+                {% include 'bill_members_navigation_tab.html' %}
+                <div class="column is-10 is-offset-1">
+                    <div class="box">
+                        <h2 class="has-text-primary is-size-5">Pedidos</h2>
+                        <table class="table is-fullwidth">
+                            <thead>
+                                <th>N do pedido</th>
+                                <th>QTD</th>
+                                <th>Item</th>
+                                <th>Usuario</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A</td>
+                                    <td>B</td>
+                                    <td>C</td>
+                                    <td>D</td>
+                                </tr>
+                                <tr>
+                                    <td>E</td>
+                                    <td>F</td>
+                                    <td>G</td>
+                                    <td>H</td>
+                                </tr>
+                                <tr>
+                                    <td>I</td>
+                                    <td>J</td>
+                                    <td>K</td>
+                                    <td>L</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

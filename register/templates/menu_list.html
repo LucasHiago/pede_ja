@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {% include 'navigation_tabs.html' %}
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            <div class="columns is-multiline">
+                <div class="column is-12">
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p class="is-size-6">Filtrar por categoria</p>
+                            </div>
+                            <div class="level-item">
+                                <div class="select">
+                                    <select name="cats" id="cats">
+                                        <option value="">Chinesa</option>
+                                        <option value="">Tailandesa</option>
+                                        <option value="">Brasileira</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field has-addons">
+                                    <p class="control has-icons-left">
+                                        <input type="search" class="input" placeholder="Busque pelo nome do item">
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="buttons">
+                                    <button id="activate_obs" class="button is-link is-outlined">Criar observações</button>
+                                    <button id="activate_cat" class="button is-link is-outlined">Adicionar categoria</button>
+                                    <button id="activate_item" class="button is-link">Adicionar item</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-12">
+                    <div class="box">
+                        <div class="media menu_item">
+                            <div class="media-content">
+                                <p class="title is-5 has-text-weight-light has-text-primary">Pratos principais</p>
+                            </div>
+                        </div>
+                        {% for item in all_items %}
+                            {% include 'menu_item_list.html' %}
+                        {% empty %}
+                            <div class="media menu_item">
+                                <div class="media_content"><p>Sem itens.</p></div>
+                            </div>
+                        {% endfor %}
+                        {% include 'pagination.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% comment %}     <h1> Cardápios </h1>
+
+    <form id="searchform" action="{% url 'register:menu_list_search_from_establishment' establishment_id %}" method="get" accept-charset="utf-8">
+        <button type="submit">Buscar</button>
+
+        <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Buscar Menus">
+    </form>
+
+    {% for item in all_items %}
+        <a href="{% url 'register:menu_item_list' item.pk %}"> {{ item.name }} <a/>
+        <a href="{% url 'register:menu_update' item.pk %}"> Atualizar Menu </a>
+        <a href="{% url 'register:menu_delete' item.pk %}"> Deletar Menu </a>
+        <br></br>
+    {% empty %}
+        Sem itens
+    {% endfor %}
+
+    <select name="categories" id="">
+    {% for category in categories %}
+        <option value=category.id>{{category.name}}</option>
+    {% endfor %}
+    </select>
+    
+    <p><a href="{% url 'register:menu_create' %}"> Criar Menu </a></p>
+    <a href="{% url 'register:menu_category_create' %}"> Criar Categoria </a>
+    <a href="{% url 'register:menu_observation_list' establishment_id %}"> Ver Observações Cadastradas </a> {% endcomment %}
+
+    <div class="modal categoria">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <p class="title is-4 has-text-primary has-text-weight-light">Adicionar categoria</p>
+                <form action="">
+                    <div class="field">
+                        <label for="nome_categoria" class="label has-text-weight-light">Nome da categoria</label>
+                        <div class="control">
+                            <input class="input" type="text" name="nome_categoria" placeholder="Italiana...">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="reset"  class="button is-medium is-danger">Cancelar</button>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-medium is-link">Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    <div class="modal dish">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <p class="title is-4 has-text-primary has-text-weight-light">Adicionar item</p>
+                <form action="">
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    <label for="nome" class="label has-text-weight-light">Nome</label>
+                                    <div class="control">
+                                        <input name="name" type="text" class="input" placeholder="Nome do prato">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="field">
+                                    <label for="img_dish" class="label image is-96x96" style="cursor:pointer;">
+                                        <img id="dish_thumb" src="https://via.placeholder.com/96" alt="">
+                                    </label>
+                                    <div class="control">
+                                        <input id="img_dish" type="file" onchange="swapThumb(this);" style="width: 0.1px;height:0.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="desc" class="label has-text-weight-light">Descricao</label>
+                        <div class="control">
+                            <input id="desc" name="desc" type="text" class="input" placeholder="Ex. Macarronada classica feita com ingredientes italianos.">
+                        </div>
+                    </div>
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    <label for="cooking_time" class="label has-text-weight-light">Tempo de preparo</label>
+                                    <div class="control">
+                                        <input id="cooking_time" name="cooking_time" type="text" class="input" placeholder="Ex. 40min">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="field">
+                                    <label for="n_pessoas" class="label has-text-weight-light">Serve</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="n_pessoas" id="n_pessoas">
+                                                <option value="1">1 pessoa</option>
+                                                <option value="2">2 pessoas</option>
+                                                <option value="3">3 pessoas</option>
+                                                <option value="4">4 pessoas</option>
+                                                <option value="5">5 pessoas</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="obs" class="label has-text-weight-light">Adicionar opcoes de observações</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="obs" id="obs">
+                                    <option value="1">Escolha as obs</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="" class="label has-text-weight-light">Adicione o valor do item</label>
+                        <div class="control">
+                            <input type="text" class="input" placeholder="Ex: R$45,90">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="" class="label has-text-weight-light">Adicione uma categoria</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="1">Especiais da casa</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <label for="" class="label has-text-weight-light">Marcar pedido como indisponivel</label>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <input type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="reset" class="button is-medium is-danger">Cancelar</button>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-medium is-link">Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $("#activate_obs").click(function(){
+        $(".modal obs").addClass("is-active");
+    });
+
+    $("#activate_cat").click(function(){
+        $(".modal.categoria").addClass("is-active");
+    });
+
+    $("#activate_item").click(function(){
+        $(".modal.dish").addClass("is-active");
+    })
+
+    $(".modal-close, .modal-background").click(function(){
+        $(this).parents(".modal").removeClass("is-active");
+    });
+
+    function swapThumb(input){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+
+            reader.onload = function(e){
+                $("#dish_thumb").attr('src', e.target.result)
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

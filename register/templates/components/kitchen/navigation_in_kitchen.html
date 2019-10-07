@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="column has-mag-3-left">
+        <div class="tabs">
+            <ul>
+                <li {% if request.resolver_match.url_name == "orders_list_kitchen_pending" %} 
+                        class="is-active"
+                    {% endif %}
+                    {% if request.resolver_match.url_name == "orders_kitchen_category_filter" %} 
+                        class="is-active"
+                    {% endif %}>
+                    <a href="{% url 'register:orders_list_kitchen_pending' establishment.pk %}">Pendentes</a>
+                </li>
+
+                <li {% if request.resolver_match.url_name == "orders_list_kitchen_preparing" %} 
+                        class="is-active"
+                    {% endif %}>
+                    <a href="{% url 'register:orders_list_kitchen_preparing' establishment.pk %}">Preparando</a>
+                </li>
+                
+                <li {% if request.resolver_match.url_name == "orders_list_kitchen_done" %} 
+                        class="is-active"
+                    {% endif %}>
+                    <a href="{% url 'register:orders_list_kitchen_done' establishment.pk %}"> Pronto</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

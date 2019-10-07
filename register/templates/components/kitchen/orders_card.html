@@ -1,0 +1,70 @@
+{% load humanize %}
+{% load load_permissions %}
+
+<div class="column is-one-third-desktop is-4-tablet">
+  <div id="kitchen-cards"
+    class="card categorie{% if request.resolver_match.url_name == "orders_kitchen_category_filter" %}{% for category in categories_filter %}{{category.id}}{% endfor %}{% else %}{% endif %} ">
+    <div class="card-content has-padb-1">
+      <div class="level is-marginless">
+        <div class="level-left">
+          <div class="level-item">
+            <p class="title is-5 has-text-info has-text-weight-normal">
+              {% if order.bill.table.name == 'order_remote' %}
+                Retirar no Balcao
+              {% else %}
+                {{ order.bill.table.name }}
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <p class="title is-4 has-text-weight-normal">#{{ order.id }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="level is-border-bottom has-padb-2">
+        <div class="level-left">
+          <div class="level-item">
+            <p class="subtitle is-6">{{ order.user.first_name|default:"Cliente" }}</p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <p class="subtitle is-7">{{order.created_at}}</p>
+          </div>
+        </div>
+      </div>
+      <p class="is-size-5 has-text-weight-normal"><strong>{{order.quantity}}x</strong> {{ order.item.name }}</p>
+      {% if order.item.observartions  %}
+      <a class="button is-primary" title="Tag" disabled>{{order.item.observartions}}</a>
+      {% endif %}
+      <p class="is-size-7 min-10 has-text-weight-normal">{{ order.observation }}</p>
+      <p class="is-size-6 has-text-weight-normal has-magb-2">Conta <strong>#{{ order.bill.id }}</strong></p>
+    </div>
+    {% if order.status == order.STATUS_PENDING %}
+    <div class="column">
+      <div class="columns is-mobile is-centered">
+        <div class="column is-two-fifths">
+          <a href="{% url 'register:order_kitchen_cancel' order.pk %}" class="button is-outlined is-danger is-fullwidth"
+            onclick="ExcludeOnCard()">Recusar</a>
+        </div>
+        <div class="column is-two-fifths">
+          <a href="{% url 'register:order_kitchen_accepted_at' order.pk %}"
+            class="button is-success is-fullwidth">Aceitar</a>
+        </div>
+      </div>
+    </div>
+    {% elif order.status == order.STATUS_PREPARING %}
+    <div class="column has-text-centered">
+      <p class="title is-7 has-text-weight-normal"> Esse pedido foi aceito às:
+        {{ order.kitchen_accepted_at|naturaltime }} </p>
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <a href="{% url 'register:order_kitchen_done' order.pk %}" class="button is-success is-fullwidth">Pronto</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  </div>

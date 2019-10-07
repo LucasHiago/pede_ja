@@ -1,0 +1,236 @@
+{% load bulma_tags %}
+{% load widget_tweaks %}
+{% load static %}
+{% block body %}
+
+
+
+<section class="box has-pad-275rem scroll-x-hide" id="establishment_employee">
+  <p class="title is-4 has-text-primary has-text-weight-light">Novo usuário</h1>
+    {% if establishment %}
+      <form action="{% url 'register:employee_create' %}?establishment_id={{establishment.id}}" enctype="multipart/form-data" method="POST">
+    {% else %}
+      <form action="{% url 'register:employee_create' %}" enctype="multipart/form-data" method="POST">
+    {% endif %}
+      {% csrf_token %}
+      <div class="columns">
+        <div class="column is-two-thirds">
+          <div class="field">
+            <div class="control name-employee">
+              <div class="field">
+                <label class="label">Nome completo</label>
+                <div class="control ">
+                  <input type="text" name="user-name" maxlength="150" class="input" required="" id="id_user-name">
+                  <p class="help">
+                    Campo requerido. Informe o nome completo.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label for="" class="label image is-96x96 no-border-radius" style="cursor:pointer;">
+              <img id="dish_thumb" src="/static/images/icon-gallery.png" alt="">
+            </label>
+            <div class="control image-employee">
+              <div class="field">
+                <label class="label">Imagem</label>
+                <div class="control">
+                  <label class="file-label">
+                    <input type="file" name="employee-image" accept="image/*" class="file-input" id="id_employee-image">
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fa fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        Choose a file…
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-full">
+          <div class="field">
+            <div class="control email-employee">
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                  <input type="email" name="user-email" maxlength="254" class="input" required="" id="id_user-email">
+                  <p class="help">
+                    Campo requerido. Informe um email válido.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-full">
+          <div class="field">
+            <div class="control password-employee">
+              <div class="field">
+                <label class="label">Senha</label>
+                <div class="control">
+                  <input type="password" name="user-password1" class="input" required="" id="id_user-password1">
+                  <p class="help">
+                  </p>
+                  <ul>
+                    <li>Sua senha não pode ser tão parecida com suas outras informações pessoais.</li>
+                    <li>Sua senha precisa conter pelo menos 8 caracteres.</li>
+                    <li>Sua senha não pode ser uma senha habitualmente utilizada.</li>
+                    <li>Sua senha não pode ser inteiramente numérica.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-full">
+          <div class="field">
+            <div class="control password-employee">
+              <div class="field">
+                <label class="label">Confirmação de senha</label>
+                <div class="control">
+                  <input type="password" name="user-password2" class="input" required="" id="id_user-password2">
+                  <p class="help">
+                    Informe a mesma senha informada anteriormente, para verificação.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-full">
+          <div class="field">
+            <div class="control cpf-employee">
+              <div class="field">
+                <label class="label">CPF</label>
+                <div class="control">
+                  <input type="text" name="employee-cpf" maxlength="11" minlength="11" class="input" required="" id="id_employee-cpf">
+                  <p class="help">
+                    Somente números
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-full">
+          <div class="field">
+            <div class="control user-type-employee">
+              <div class="field">
+                <label class="label ">Tipo de Usuário</label>
+                <div class="control ">
+                  <span class="select">
+                    <select name="employee-user_type" class=" control" required="" id="id_employee-user_type">
+                      <option value="" selected="">---------</option>
+                      <option value="USER_MANAGER">Gerente</option>
+                      <option value="USER_WAITER">Garçom(nete)</option>
+                      <option value="USER_KITCHEN">Cozinheiro(a)</option>
+                      <option value="USER_DOOR_MAN">Atendente</option>
+                    </select>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if not establishment %}
+        <div class="columns">
+            <div class="column is-full">
+                <div class="field">
+                    <div class="control user-type-employee">
+                        <div class="field">
+                            <label class="label">Estabelecimento</label>
+                            <div class="control">
+                              <span class="select">
+                                <select name="employee-establishment" class="control" required="" id="id_employee-establishment">
+                                  <option value="" selected="">---------</option>
+                                  {% for establishment in establishments %}
+                                  <option value={{establishment.id}}>{{establishment.name}}</option>
+                                  {% endfor %}
+                                </select>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      {% endif %}
+
+      <div class="field is-grouped">
+        <div class="control btn-width">
+          <button type="reset" class="button is-medium is-danger is-complete">Cancelar</button>
+        </div>
+        <div class="control btn-width">
+          <button type="submit" class="button is-medium is-link is-complete">Adicionar</button>
+        </div>
+      </div>
+    </form>
+
+</section>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+<script>
+  $(document).on('submit', '#establishment_employee', function (e) {
+    e.preventDefault();
+    let path = $(this).children('form:first').attr('action');
+    $.ajax({
+      type: 'POST',
+      url: path,
+      data: {
+        'user-name': $('#id_user-name').val(),
+        'employee-image': $('#id_employee-image').val(),
+        'user-email': $('#id_user-email').val(),
+        'user-password1': $('#id_user-password1').val(),
+        'user-password2': $('#id_user-password2').val(),
+        'employee-cpf': $('#id_employee-cpf').val(),
+        'employee-user_type': $('#id_employee-user_type').val(),
+        'employee-establishment': $('#id_employee-establishment').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+      },
+      dataType: 'json',
+      statusCode: {
+        406: function(data, text) {
+          console.log(data);
+          console.log(text);
+          {% if form_error == true %}
+
+            let validateValues = data.responseText;
+
+            $("#warn").addClass('is-active');
+            $("#warn").removeClass('is-inactive');
+            $("#warn").append('<p> O campo está com problemas: '+validateValues+'</p>');
+
+          {% else %}
+
+          {% endif %}
+        },
+        200: function() {
+          console.log("sucesso");
+          $(".modal").removeClass("is-active");
+        }
+      }
+    });
+  });
+</script>
+
+
+{% endblock %}

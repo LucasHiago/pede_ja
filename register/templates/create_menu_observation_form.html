@@ -1,0 +1,20 @@
+<div class="box">
+    <p class="title is-4 has-text-primary has-text-weight-light">Adicionar observações</p>
+    <form action="{% url 'register:menu_observation_item_create' establishment_id %}" method="POST">
+        {% csrf_token %}
+        <div class="field">
+            <label for="{{form.observation.id_for_label}}" class="label has-text-weight-light">Observações</label>
+            <div class="control">
+                {{form.observation}}
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <button type="reset" class="button is-medium is-danger">Cancelar</button>
+            </div>
+            <div class="control">
+                <button type="submit" class="button is-medium is-link">Adicionar</button>
+            </div>
+    </div>
+    </form>
+</div>

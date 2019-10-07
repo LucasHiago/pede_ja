@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load bulma_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section class="bg-white moip-account">
+    <div class="column is-10 is-offset-1">
+        <p class="title is-2 has-text-primary has-text-weight-light">Criar Conta Wirecard - Pessoa Física</p>
+    </div>
+    <div class="column is-10 is-offset-1 box">
+        <div class="columns is-multiline has-pad-3">
+            <div class="column is-full">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p class="moip-text">Nome</p>
+                    {{ form.name|bulma }}
+                    <p class="moip-text">Sobrenome</p>
+                    {{ form.last_name|bulma }}
+                    <p class="moip-text">E-mail</p>
+                    {{ form.email|bulma }}
+            </div>
+            <div class="column is-half is-marginless is-paddingless">
+                <div class="column">
+                    <p class="moip-text">CPF</p>
+                    {{ form.number_cpf|bulma }}
+                    <p class="moip-text has-magt-6">Nascimento</p>
+                    {{ form.birth_date|bulma }}
+                    <div class="columns">
+                        <div class="column is-3">
+                            <p class="moip-text">Código País</p>
+                            {{ form.country_code|bulma }}
+                        </div>
+                        <div class="column is-3">
+                            <p class="moip-text">Código Área</p>
+                            {{ form.area_code|bulma }}
+                        </div>
+                        <div class="column is-6">
+                            <p class="moip-text">Telefone</p>
+                            {{ form.phone_number|bulma }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-half">
+                <p class="moip-text">RG</p>
+                {{ form.number_rg|bulma }}
+                <div class="columns">
+                    <div class="column is-half">
+                        <p class="moip-text">Emissor</p>
+                        {{ form.issuer|bulma }}
+                    </div>
+                    <div class="column is-half">
+                        <p class="moip-text">Data de Emissão</p>
+                        {{ form.issue_date|bulma }}
+                    </div>
+                </div>
+            </div>
+            <div class="column is-full">
+                <div class="columns">
+                    <div class="column is-half">
+                        <p class="moip-text">Estado</p>
+                        {{ form.state|bulma }}
+                        <p class="moip-text">Distrito/Bairro</p>
+                        {{ form.district|bulma }}
+                    </div>
+                    <div class="column is-half">
+                        <p class="moip-text">Cidade</p>
+                        {{ form.city|bulma }}
+                        <div class="columns">
+                            <div class="column is-3">
+                                <p class="moip-text">Número da Rua</p>
+                                {{ form.street_number|bulma }}
+                            </div>
+                            <div class="column is-9">
+                                <p class="moip-text">Rua</p>
+                                {{ form.street|bulma }}
+                            </div>
+                        </div>
+                        <p class="moip-text">CEP</p>
+                        {{ form.zip_code|bulma }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-two-fifths has-margin-auto">
+            <button type="submit" class="button is-primary has-in-center is-complete">Salvar</button>
+        </div>
+        </form>
+    </div>
+</section>
+<script>
+   $(document).ready(function(){
+        $('input#id_birth_date').mask('0000-00-00', {reverse: true});
+        $('input#id_number_cpf').mask('000.000.000-00', {reverse: true});
+        //$('input#id_number_rg').mask('00.000.000'); 
+        //$('input#id_phone_number').mask('9 0000-0000'); 
+        $('input#id_zip_code').mask('00000-000'); 
+        $('input#id_issue_date').mask('0000-00-00'); 
+        
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+{% endblock %}

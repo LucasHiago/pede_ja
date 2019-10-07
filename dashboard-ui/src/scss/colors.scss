@@ -1,0 +1,8 @@
+@each $color in $noruh-custom-colors {
+  $color-name: nth($color, 1);
+  $color-value: nth($color, 2);
+
+  .has-text-#{$color-name} {
+    color: $color-value;
+  }
+}

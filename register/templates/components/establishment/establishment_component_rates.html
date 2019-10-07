@@ -1,0 +1,200 @@
+{% extends 'components/establishment/establishment_component_base_rate.html' %}
+
+{% block title %}Taxas do Estabelecimento{% endblock %}
+
+
+{% block buttons %}
+<button id="activate_obs" class="button is-link is-outlined">
+    <a id="card-offer-range-value" href="{% url 'register:establishment_update_offer_range_value' establishment.pk %}"> Editar Intervalo de Valor para Ofertas </a>
+</button>
+<button id="activate_obs" class="button is-link is-outlined">
+    <a id="card-couvert" href="{% url 'register:establishment_update_couvert' establishment.pk %}"> Editar Couvert </a>
+</button>
+{% if user.is_superuser %}
+<button id="activate_cat" class="button is-link is-outlined">
+    <a href="{% url 'register:establishment_update_taxes' establishment.pk %}"> Editar Taxas </a>
+</button>
+{% endif %}
+{% endblock buttons %}
+
+
+{% block content %}
+
+<div class="level is-bg-tertiary has-pad-2 has-magb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Taxa</label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Valor</label>
+        </div>
+    </div>
+</div>
+
+<div class="level is-border-bottom has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Couvert Artistico:</label>
+    </div>
+    <div class="level-right">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">R${{establishment.taxe_couvert}}</label>
+    </div>
+</div>
+
+
+<p> </p>
+{% if user.is_superuser %}
+
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Taxa Noruh:</label>
+    </div>
+    <div class="level-right">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">R${{establishment.noruh_fee}}</label>
+    </div>
+</div>
+
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Taxa Fixa do Moip:</label>
+    </div>
+    <div class="level-right">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">R${{establishment.moip_fee}}</label>
+    </div>
+</div>
+
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Porcentagem do Moip:</label>
+    </div>
+    <div class="level-right">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{establishment_payment_tax}}%</label>
+    </div>
+</div>
+
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Valor para Intervalo de Ofertas:</label>
+    </div>
+    <div class="level-right">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">R${{establishment.offer_range_value}}</label>
+    </div>
+</div>
+
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Porcentagem para repasse offline:</label>
+    </div>
+    <div class="level-right">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{establishment_offline_percentage}}%</label>
+    </div>
+</div>
+
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left"> Pagar Taxas do Moip</div>
+    <div class="level-item has-text-centered">
+
+    </div>
+    <div class="level-right">
+        <div class="onoffswitch">
+            <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox"
+                id="update_pay_moip">
+            <label class="onoffswitch-label" for="update_pay_moip"></label>
+        </div>
+    </div>
+</div>
+
+
+
+{% endif %}
+
+
+<div class="modal table_item">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<script>
+    {% if establishment.pays_payment_tax %}
+    $("#update_pay_text").each(function () { this.innerText = "Ativo"; });
+    $("#update_pay_moip").each(function () { this.checked = true; });
+    {% elif not establishment.pays_payment_tax %}
+    $("#update_pay_text").each(function () { this.innerText = "Inativo"; });
+    $("#update_pay_moip").each(function () { this.checked = false; });
+    {% else %}
+    {% endif %}
+
+    $("#update_pay_moip").click(function (e) {
+        $.ajax({
+            url: "{% url 'register:establishment_update_pays_payment_tax' establishment.pk %}",
+            method: "GET"
+        })
+            .done(function (data) {
+                if (data.opened) {
+                    $("#update_pay_text").each(function () { this.innerText = "Ativo"; });
+                    $("#update_pay_moip").each(function () { this.checked = true; });
+                } else {
+                    $("#update_pay_text").each(function () { this.innerText = "Inativo"; });
+                }
+            })
+            .fail(function (xhr) {
+                console.log('error', xhr);
+            });
+        e.stopImmediatePropagation();
+    });
+
+    $("a#card-couvert").click(function (e) {
+        e.stopImmediatePropagation(); // those pesky handlers
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+
+    $("a#card-offer-range-value").click(function (e) {
+        e.stopImmediatePropagation(); // those pesky handlers
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+</script>
+
+
+{% endblock content %}

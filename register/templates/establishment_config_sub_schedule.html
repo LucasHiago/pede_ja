@@ -1,0 +1,83 @@
+{% extends 'establishment_config_sub_base.html' %}
+
+{% block title %}Horarios{% endblock title %}
+
+{% block buttons %}
+    <button class="button is-primary">Novo Horario</button>
+    <button class="button is-primary is-outlined">Salvar</button>
+{% endblock buttons %}
+
+{% block content %}
+    <div class="media">
+        <div class="media-content">
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Dias</th>
+                        <th>Abre</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Segunda a Sexta</td>
+                        <td>
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="10">10:00</option>
+                                    <option value="11">11:00</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="10">20:00</option>
+                                    <option value="11">21:00</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sabado</td>
+                        <td>
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="10">10:00</option>
+                                    <option value="11">11:00</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="10">20:00</option>
+                                    <option value="11">21:00</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Domingo</td>
+                        <td>
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="10">10:00</option>
+                                    <option value="11">11:00</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select name="" id="">
+                                    <option value="10">20:00</option>
+                                    <option value="11">21:00</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

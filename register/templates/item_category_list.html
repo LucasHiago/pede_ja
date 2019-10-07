@@ -1,0 +1,47 @@
+{% block body %}
+<div class="box">
+    <div class="media menu_item">
+        <p class="title is-4 has-text-primary has-text-weight-light">Categorias</p>
+    </div>
+  {% for item in all_items %}
+  <div class="media menu_item">
+    <div class="media-content">
+      <div class="content">
+        <p>
+          {{ item.name }}
+        </p>
+      </div>
+    </div>
+    <div class="media-right">
+      <div class="level">
+        <div class="level-right">
+
+          <div class="level-item">
+            <a id="edit-item-off" class="button icon has-text-grey-light"
+              onclick="updateAction('{% url 'register:menu_category_update' item.pk %}', '{{ csrf_token }}')">
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+          </div>
+          <div class="level-item">
+            <a class="button icon has-text-grey-light "
+              onclick="deleteAction('{% url 'register:menu_category_delete' item.pk %}', '{{ csrf_token }}')">
+              <i class="fas fa-trash"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="media menu_item">
+    <div class="media-content">
+      <div class="content">
+        <a id="activate_cat_in_list"
+          onclick="updateAction('{% url 'register:menu_category_create' establishment.id %}', '{{ csrf_token }}')"> Adicionar Categoria <i
+          class="fas fa-plus"></i> </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

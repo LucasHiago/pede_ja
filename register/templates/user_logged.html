@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section>
+    <div class="column is-10 is-offset-1">
+        <h1 class="is-size-3 has-text-primary has-magb-2">Informações do Usuário</h1>
+        <div class="column is-full-mobile is-full-tablet is-9-desktop is-full-widescreen is-6-fullhd box">
+            <div class="column">
+                <div class="level-item">
+                    <h4 class="title is-4  no-margin-bottom has-text-centered has-magl-2">
+                        {{ item.first_name }}
+                        {{ item.last_name }}
+                        <br>
+                        <a class="button  is-primary has-in-center has-magt-2"
+                            href="{% url 'register:user_logged_alter' item.pk %}">Alterar informações pessoais</a>
+                    </h4>
+
+                    <h5 class="title is-5  no-margin-bottom has-text-centered has-magl-2">
+                        <small>{{ item.email }}</small><br>
+                            <a class="button  is-primary has-in-center has-magt-55" href="{% url 'password_change' %}">Mudar minha senha</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

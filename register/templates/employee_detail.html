@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load thumbnail %}
+
+{% block body %}
+<section>
+    <div class="media">
+        <div class="media-left image">
+            <img class="is-rounded" src="{{ item.image|thumbnail_url:'dashboard_employee_detail_avatar' }}" />
+        </div>
+        <div class="media-content">
+            <h1 class="title is-1">
+                {{ item.user.first_name }}
+                {{ item.user.last_name }}
+            </h1>
+            <p>{{ item.user_type }}</p>
+            <p>{{ item.user.email }}</p>
+            <p>{{ item.establishment }}</p>
+            <hr />
+            <p><strong>CPF:</strong> {{ item.cpf }}</p>
+            <hr />
+            <a class="button is-primary" href="{% url 'register:employee_delete' item.pk %}">Remover Empregado</a>
+        </div>
+        <div class="media-right">
+            <a href="{% url 'register:employee_alter' item.pk %}"><i class="fas fa-pencil-alt"></i> Editar usuário</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

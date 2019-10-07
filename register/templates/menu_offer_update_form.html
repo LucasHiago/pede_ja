@@ -1,0 +1,16 @@
+{% load bulma_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section class="box" id="">
+  <h1 class="title is-4 has-text-primary" >Atualizar Oferta</h1>
+  <form method="POST" action="{% url 'register:menu_offer_update' menu_offer.id %}">
+    {% csrf_token %}
+    {{ form.name|bulma }}
+    {{ form.category|bulma }}
+    {{ form.discount|bulma }}
+    <button type="submit" class="button is-primary is-complete">Salvar</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load bulma_tags leaflet_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block extra-css %}
+{% leaflet_css plugins="forms" %}
+{% endblock %}
+
+{% block extra-js %}
+{% leaflet_js plugins="forms" %}
+{% endblock %}
+
+{% block body %}
+<section class="bg-white">
+    <div class="column is-10 is-offset-1">
+        <p class="title is-3 is-size-2 has-text-primary">{{ establishment.name }}</p>
+        <p class="title is-2 has-text-primary has-text-weight-light">{{title}}</p>
+    </div>
+    <div class="column is-10 is-offset-1 box"> 
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|bulma }}
+            <button type="submit" class="button is-primary has-magt-2 is-complete">Salvar</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

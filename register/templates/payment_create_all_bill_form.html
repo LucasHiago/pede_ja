@@ -1,0 +1,33 @@
+<div class="container is-fluid is-clipped">
+  <div class="columns is-centered">
+    <div class="column b">
+      <div class="card">
+        <div class="card-content">
+          <h1 class="title is-3 has-text-primary has-text-weight-light">Fechar {{ bill.table }}</h1>
+
+          <p class="title is-6"> Total </p>
+          <form id="all_payment_bill_create" action="{% url 'register:bill_payment_create' bill.id %}" method="POST">
+            {% csrf_token %}
+            <input class="input is-medium has-text-centered" type="text" step="0.01" name="value" value={{bill.still_have_to_pay|floatformat:2}}><br>
+
+            <!-- This need to be addressed, because it will load this page out of the modal window -->
+              {{must_pay_min_value}}
+            <section>
+              <p class="title is-6">Escolha um usuário</p>
+              <div class="select is-fullwidth">{{ form.bill_member }}</div>
+            </section>
+
+            <div class="columns">
+              <div class="column is-half">
+                <a onclick="closeModal()" class="button is-danger is-fullwidth"> Cancelar </a>
+              </div>
+              <div class="column is-half">
+                <input class="button is-primary is-fullwidth" type="submit" value="Fechar conta">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

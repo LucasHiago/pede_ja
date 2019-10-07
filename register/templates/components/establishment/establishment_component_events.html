@@ -1,0 +1,120 @@
+{% extends 'components/establishment/establishment_component_base.html' %}
+
+{% block title %}Eventos{% endblock %}
+
+{% block buttons %}<a id="card-events" href="{% url 'register:events_create' establishment.id %}"> Criar um Novo Evento
+</a>
+{% endblock buttons %}
+
+
+
+{% block content %}
+
+{% for event in events %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left is-min-width-150">
+        <label id="" for=""
+            class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ event.description }}</label>
+    </div>
+
+    <div class="level-right has-text-centered ">
+        <a id="eventedit-{{event.pk}}" class="button icon has-text-grey-light" href="{% url 'register:events_update' event.pk %}">
+            <i class="fas fa-pencil-alt"></i>
+        <a id="eventmodal-{{event.pk}}" href="{% url 'register:events_delete' event.pk %}"
+        class="button icon has-text-grey-light"> <i class="fas fa-trash"></i> </a>
+    </div>
+</div>
+
+<script>
+
+    $("a#eventmodal-{{event.pk}}").click(function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+
+    $("a#eventedit-{{event.pk}}").click(function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+
+</script>
+
+
+{% endfor %}
+
+
+<div class="modal table_item">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<script>
+    $("a#card-events").click(function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+</script>
+
+
+{% endblock content %}

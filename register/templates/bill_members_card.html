@@ -1,0 +1,65 @@
+{% load thumbnail %}
+
+<div class="column is-half">
+  <div class="card has-padding">
+      <div class="media vertical_center">
+          <div class="media-left">
+          <figure class="image is-64x64">
+              {% if bill_member.customer.profile.image_url %}
+                  <img class="is-rounded" src="{% thumbnail bill_member.customer.profile.image_url 60x60 crop %}" alt="" />
+              {% else %}      
+                  <img src="https://via.placeholder.com/64" alt="" class="is-rounded">
+              {% endif %}
+          </figure>
+          </div>
+          <div class="media-content">
+              <p class="is-size-5 has-text-weight-bold">
+                  {{bill_member.customer.first_name|default:"Cliente"}}
+              </p>
+              <p class="is-size-6">
+                  R$ {{ bill_member.value_consumed|floatformat:2 }} <span class="has-text-grey-light"> - entrou às {{bill_member.joined_at.time}}</span>
+              </p>
+          </div>
+          {% with payment=bill_member.has_paid %}
+
+            {% if not payment %}
+              <div class="media-right">
+                <button id="create_payment" onclick="createPayment({{ bill_member.pk }})" class="button is-primary">Criar Pagamento</button>
+              </div>
+
+            {% elif payment.status_payment == payment.STATUS_AUTHORIZED %}
+              <div class="media-right">
+                <p class="has-text-success">Pago online<br>R$ {{payment.value}}</p>
+              </div>
+
+            {% elif payment.status_payment == payment.STATUS_OFFLINE_APPROVED %}
+              <div class="media-right">
+                <p class="has-text-success">Pago offline<br>R$ {{payment.value}}</p>
+              </div>
+
+            {% elif payment.status_payment == payment.STATUS_IN_ANALYSIS %}
+              <div class="media-right">
+                <p class="has-text-danger">
+                  Pagamento online pendente<br>R$ {{payment.value}}
+                </p>
+              </div>
+
+            {% elif payment.status_payment == payment.STATUS_OFFLINE_CANCELLED or payment.status_payment == payment.STATUS_CANCELLED %}
+              <div class="media-right">
+                <button id="create_payment" onclick="createPayment({{ bill_member.pk }})" class="button is-primary">Criar Pagamento</button>
+              </div>
+
+            {% elif payment.status_payment == payment.STATUS_OFFLINE_PENDING %}
+              <div class="media-right">
+                <p class="has-text-danger">
+                  <a onclick="confirmPayment({{payment.pk}})">Pagamento offline pendente<br>R$ {{payment.value}}</a>
+                </p>
+              </div>
+
+            {% endif %}
+
+          {% endwith %}
+
+      </div>
+  </div>
+</div>

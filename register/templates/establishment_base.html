@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail %}
+
+{% load thumbnail %}
+
+{% block body %}
+<div class="container is-fluid">
+
+    {% if request.user.is_superuser %}
+    <div class="media align-center">
+        <div class="media-left image">
+            <img class="is-rounded" src="{{ establishment.logo_url|thumbnail_url:'dashboard_establishment_logo'|default:"https://via.placeholder.com/64" }}" />
+        </div>
+        <div class="media-content">
+            <h3 class="title is-3 is-size-3 has-text-primary">{{ establishment.name }}</h3>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if request.user.is_superuser %}
+        {% include 'navigation_tabs.html' %}
+    {% endif %}
+    
+    {% block content %}{% endblock %}
+        
+</div>
+{% endblock %}

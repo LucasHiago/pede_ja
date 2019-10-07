@@ -1,0 +1,92 @@
+{% load staticfiles load_permissions thumbnail %}
+
+<nav class="nav-left">
+        <div class="nav-left__wrapper">
+            <a href="{% url 'register:user_logged_detail' %}" class="media nav-left__profile has-text-white">
+                <div class="media-left nav-left__profile__avatar">
+                    {% if user.employee %}
+                      {% if user.employee.image %}
+                      <img src="{{ user.employee.image|thumbnail_url:'dashboard_user_avatar' }}" />
+                      {% else %}
+                      <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+                      {% endif %}
+                    {% else %}
+                    <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+                    {% endif %}
+                </div>
+                <div class="media-content is-hidden-mobile">
+                    <div>{{ user.get_full_name|default:user.username }}</div>
+                    <div class="has-text-grey-light">{{ user.email }}</div>
+                </div>
+            </a>
+            <div class="nav-left__pages">
+                <a href="{% url 'register:home' %}">
+                    <i class="fa fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                {% if user|permissions %}
+                {% if user.manager %}
+                <a href="{% url 'register:orders_list' request.user.manager.establishment.pk %}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Pedidos</span>
+                </a>
+                <a href="{% url 'register:table_zone_list' request.user.manager.establishment.pk %}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Mesas</span>
+                </a>
+                <a href="{% url 'register:bill_list' request.user.manager.establishment.pk %}">
+                    <i class="fas fa-check-double"></i>
+                    <span>Contas</span>
+                </a>
+                <a href="{% url 'register:menu_item_list' request.user.manager.establishment.pk %}">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Cardápio</span>
+                </a>
+                <a href="{% url 'register:employee_list_establishment' request.user.manager.establishment.pk %}">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+                <a href="{% url 'register:establishment_configurations' request.user.manager.establishment.pk %}">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+                {% else %}
+                <a href="{% url 'register:establishment_list_all' %}">
+                    <i class="fas fa-utensils"></i>
+                    <span>Estabelecimentos</span>
+                </a>
+                <a href="{% url 'register:employee_list_all' %}">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+                {% endif %}
+                {% endif %}
+                {% if user.employee %}
+                {% if user|permissions:"3" %}
+                <a href="{% url 'register:orders_list' request.user.employee.establishment.pk %}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Pedidos</span>
+                </a>
+                <a href="{% url 'register:bill_list' request.user.employee.establishment.pk %}">
+                    <i class="fas fa-check-double"></i>
+                    <span>Contas</span>
+                </a>
+                <a href="{% url 'register:request_list' request.user.employee.establishment.pk %}">
+                    <i class="fas fa-circle"></i>
+                    <span>Solicitações</span>
+                </a>
+                {% endif %}
+                {% if request.user|permissions:"2" %}
+                <a href="{% url 'register:orders_list_kitchen_pending' request.user.employee.establishment.pk %}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Pedidos</span>
+                </a>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="nav-left__action">
+                <a href="{% url 'logout' %}" class="button is-highlight is-rounded is-medium is-fullwidth">Sair</a>
+                <a href="{% url 'logout' %}" class="icon fa fa-sign-out-alt"></a>
+            </div>
+        </div>
+    </nav>

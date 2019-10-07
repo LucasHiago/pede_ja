@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load load_permissions %}
+{% load thumbnail %}
+{% block title %}Chamadas{% endblock %}
+
+{% block body %}
+
+<section>
+  <div class="columns">
+    <div class="column is-10 is-offset-1">
+      <div class="columns is-multiline">
+        <div class="column is-full">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="is-size-3 has-text-primary">Chamadas</h1>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <div class="has-text-centered">
+                  <a id="accept_all_requests" href="{% url 'register:accept_all_requests' establishment.id %}" class="button is-fullwidth is-primary">Atender Todos</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% for request in requests %}
+          <div class="column is-half">
+            <div class="card has-padding">
+              <div class="media vertical_center">
+                <div class="media-left">
+                  <figure class="image is-64x64">
+                    {% if request.user.profile.image_url %}
+                      <img class="is-rounded" src="{% thumbnail request.user.profile.image_url 60x60 crop %}" alt="" />
+                    {% else %}      
+                      <img src="https://via.placeholder.com/64" alt="" class="is-rounded">
+                    {% endif %}
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="is-size-5 has-text-weight-bold">
+                    {{request.user.first_name|default:"Cliente"}}
+                  </p>
+                  <p class="is-size-6">
+                    {% if request.table.name == 'order_remote' %}
+                      Contas » Retirar no Balcao
+                    {% else %}
+                      {{ request.table.name }}
+                    {% endif %}  
+                  </p>
+                </div>
+                <div class="media-right">
+                  <a id="create_payment" href="{% url 'register:accept_request' request.pk %}" class="button is-primary">Atender</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% if is_paginated %}
+        {% include 'pagination.html'%}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

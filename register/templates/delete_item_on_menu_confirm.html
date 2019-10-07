@@ -1,0 +1,19 @@
+<div class="box">
+    <form id="delete-form" method="POST">
+        {% csrf_token %}
+        <h3>Você tem certeza que deseja remover o item <strong>{{ menu_item.name }}</strong>?</h3>
+        <div class="field is-grouped">
+            <div class="control btn-width">
+                <button type="reset" class="button close-btn-modal is-medium is-danger is-complete">Cancelar</button>
+            </div>
+            <div class="control btn-width">
+                <button type="submit" class="button is-medium is-link is-complete">Sim</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(".close-btn-modal, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+    });
+</script>

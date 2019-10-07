@@ -1,0 +1,131 @@
+{% load thumbnail %}
+<div class="columns is-multiline">
+    <div class="column is-10 is-offset-1">
+        {% if not request.user.is_superuser %}
+        <h1 class="is-size-3 has-text-primary">Usuários</h1>
+        {% endif %}
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <form
+                        action="{% if request.user.manager %} {% url 'register:employee_list_search_establishment' request.user.manager.establishment.pk %} {% else %} {% url 'register:employee_search_list' %} {% endif %}"
+                        id="searchform" method="GET">
+                        <div class="field">
+                            <div class="control">
+                                <input id="searchbox" name="q" type="text" class="input" placeholder="Buscar usuario">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <a id="modalemployee"
+                        onclick="updateAction('{% url 'register:employee_create' %}?establishment_id={{establishment.id}}', '{{ csrf_token }}')"
+                        class="button is-primary">Novo Usuario</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column is-10 is-offset-1">
+        <div class="columns is-multiline">
+            {% for item in all_items %}
+            <div class="column is-half">
+                <div class="card has-padding">
+                    <div class="media">
+                        <div class="media-left image">
+                            <img class="is-rounded"
+                                src="{{ item.image|thumbnail_url:'dashboard_employee_list_avatar' }}" />
+                        </div>
+                        <div class="media-content">
+                            <h5 class="title is-5 has-half-margin">
+                                <a class="has-text-grey-dark has-text-weight-semibold"
+                                    href="{% url 'register:employee_detail' item.pk %}">
+                                    {{ item.user.first_name }}
+                                    {{ item.user.last_name }}
+                                </a>
+                            </h5>
+                            {% if item.user_type == item.USER_MANAGER %}
+                            <p class="has-text-grey"> Gerente</p>
+                            {% elif item.user_type == item.USER_WAITER %}
+                            <p class="has-text-grey"> Garçom</p>
+                            {% elif item.user_type == item.USER_KITCHEN %}
+                            <p class="has-text-grey"> Cozinheiro</p>
+                            {% else %}
+                            <p class="has-text-grey"> Porteiro</p>
+                            {% endif %}
+                            <p class="has-text-grey">{{ item.establishment }}</p>
+                            <p class="has-text-grey">{{ item.user.email }}</p>
+                        </div>
+                        <div class="media-right">
+                            <a id="modalemployeeupdate-{{item.pk}}"
+                                onclick="updateAction('{% url 'register:employee_alter' item.pk %}', '{{ csrf_token }}')"
+                                class="button icon has-text-grey-light">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a id="modalemployeedelete-{{item.pk}}"
+                                onclick="deleteAction('{% url 'register:employee_delete' item.pk %}', '{{ csrf_token }}')"
+                                class="button icon has-text-grey-light">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $("a#modalemployeedelete-{{item.pk}}").click(function (e) {
+                    e.stopImmediatePropagation(); // those pesky handlers
+                    e.preventDefault();
+                    url = this.href;
+
+                    $.get(url, function () {
+                        console.log("Fetching data");
+                    })
+                        .done(function (data) {
+                            console.log("Data fetched succesfully :)");
+                            $(".modal.table_item > .modal-content").html(data);
+                            $(".modal.table_item").addClass("is-active");
+                            $(".modal .modal-content button.is-danger").click(function () {
+                                $(".modal").removeClass("is-active");
+                            });
+                        })
+                        .fail(function (xhr) {
+                            console.log("Error: ", xhr);
+                        });
+
+                    $(".modal-close, .modal-background").click(function () {
+                        $(".modal").removeClass("is-active");
+                    });
+                });
+                $(document).ready(function () {
+                    {% if form_error %}
+                    {% endif %}
+                });
+            </script>
+
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+        <div class="columns">
+            <div class="column">
+                {% include 'pagination.html' %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+ 
+
+
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div id="warn" class="warn is-inactive"></div>
+        <div class="modal-content"></div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+</div>
+
+
+
+

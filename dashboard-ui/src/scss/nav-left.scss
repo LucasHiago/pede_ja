@@ -1,0 +1,128 @@
+.nav-left {
+  $tag-size: ($nav-left-collapsed-width - $nav-left-padding);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $nav-left-collapsed-width;
+  height: 100%;
+  color: $white;
+  background-color: $nav-left-background-color;
+  overflow: auto;
+
+  @include tablet {
+    width: $nav-left-width;
+  }
+
+  &__wrapper {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 5rem;
+  }
+
+  &__profile {
+    position: relative;
+    padding: ($nav-left-padding / 2);
+    background-color: $nav-left-highlight;
+    box-shadow: 0 0 .2rem rgba(0, 0, 0, .6);
+
+    @include tablet {
+      padding: $nav-left-padding;
+    }
+
+    &__avatar {
+      width: 100%;
+      background-color: $grey;
+      border-radius: 50%;
+      overflow: hidden;
+
+      img {
+        display: block;
+        min-width: 100%;
+        min-height: 100%;
+      }
+
+      @include tablet {
+        width: $tag-size;
+      }
+    }
+  }
+
+  &__pages {
+    a {
+      display: flex;
+      align-items: center;
+      padding: $nav-left-padding;
+      color: darken($white, 25%);
+
+      i {
+        width: $tag-size;
+        text-align: center;
+      }
+
+      span {
+        display: none;
+
+        @include tablet {
+          display: block;
+        }
+      }
+
+      &:hover,
+      &.actived {
+        color: $white;
+        background-color: $nav-left-highlight;
+
+        i {
+          color: $primary;
+        }
+      }
+    }
+  }
+
+  &__action {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: $nav-left-padding;
+
+    .icon {
+      display: block;
+      width: 100%;
+      color: $grey;
+      text-align: center;
+
+      @include tablet {
+        display: none;
+      }
+    }
+
+    .button {
+      display: none;
+
+      @include tablet {
+        display: block;
+      }
+    }
+  }
+
+  .button.is-highlight {
+    background-color: $nav-left-highlight;
+    border-color: transparent;
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: darken($nav-left-highlight, 2.5%);
+    }
+  }
+}
+
+body.has-nav-left {
+  padding-left: $nav-left-collapsed-width;
+
+  @include tablet {
+    padding-left: $nav-left-width;
+  }
+}

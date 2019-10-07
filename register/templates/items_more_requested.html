@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Itens mais Pedidos{% endblock %}
+
+{% block body %}
+<div class="columns">
+  <div class="column is-10 is-offset-1">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h1 class="title is-3 has-text-weight-normal noruh_establishment_title">
+            {{establishment.name}}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column is-10 is-offset-1">
+    <div class="columns is-multiline">
+      <div class="column is-full">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="subtitle is-5">Itens mais pedidos</p>
+              </div>
+            </div>
+            {% for order in more_requested %}
+            <div class="media">
+              <div class="media-left">
+                <figure class="image is-64x64">
+                    {% if order.item__photo %}
+                        <img class="is-rounded" src="{% thumbnail order.item__photo 60x60 crop %}" alt="" />
+                    {% else %}      
+                        <img src="https://via.placeholder.com/64" alt="" class="is-rounded">
+                    {% endif %}
+                </figure>
+              </div>
+              <div class="media-content">
+                <p>{{order.item__name}}</p>
+              </div>
+              <div class="media-right">
+                <p>{{order.pedidos}}</p>
+              </div>
+            </div>
+            {% empty %}
+            <div class="media">
+              <div class="media-content">
+                <p>Sem itens.</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+{% endblock %}

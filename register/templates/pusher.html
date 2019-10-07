@@ -1,0 +1,226 @@
+{% load load_permissions %}
+<script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+
+<audio id="KitchenNewCardAudio">
+  <source src="/static/songs/notification-song.mp3" type="audio/mpeg">
+  <source src="/static/songs/notification-song.ogg" type="audio/ogg">
+</audio>
+
+<script>
+  var user_id = {{ request.user.id }}
+  var pusher = new Pusher('38e53fddef6294aad17e', {
+    cluster: 'us2',
+    forceTLS: true
+  });
+
+  function PlaySound() {
+    var KitchenNewCardAudio = document.getElementById("KitchenNewCardAudio");
+    KitchenNewCardAudio.play();
+    CallNavigation();
+  }
+
+  function CallNavigation() {
+    setTimeout(function () {
+      $(".dropdown").addClass("is-active");
+    }, 650);
+    CallNotification();
+  };
+
+  function StartNotify(Text) {
+    $(".notification").addClass('is-active');
+    $('#notify').html(Text + '<button id="delete" class="delete"></button>');
+    $(".notification").removeClass('is-inactive');
+    //CloseNotify();
+  }
+
+  function CloseNotify() {
+    setTimeout(function () {
+      $(".notification").removeClass('is-active');
+      $(".notification").addClass('is-inactive');
+      startRefresh();
+    }, 2850);
+  };
+
+  function startRefresh() {
+    $.get('#collapse-body', function (data) {
+      $(document.body).html(data);
+    });
+  }
+
+</script>
+
+{% if request.user|permissions:"2" %}
+<script>
+  var channel = pusher.subscribe(`kitchen-${user_id}`);
+  channel.bind('makes_new_order', function (data) {
+    //alert(JSON.stringify('Novo Pedido Realizado ' + data.id));
+    CallNewCard();
+  });
+
+  channel.bind('cancels_existing_order', function (data) {
+    alert(JSON.stringify('O pedido de Número: ' + data.id + ' Foi cancelado pelo usuário'));
+    function TheOrder() {
+      $('#TheOrder').append(`<div id="content-dropdown-notify" class="dropdown-item ">
+      <div class="level is-marginless is-paddingless">
+        <div class="level-left">
+          <p class="is-size-7">#`+ data.id + `</p>
+        </div>
+        <div class="level-right">
+          <p class="is-size-7"></p>
+        </div>
+      </div>
+      <p class="is-size-7 has-text-weight-normal">
+        Foi cancelado pelo usuário
+      </>
+    </div>
+    <hr class="dropdown-divider">
+`);
+
+      PlaySound();
+      StartNotify("Pedido Cancelado");
+    }
+    TheOrder();
+
+    $('#delete').click(function () {
+        $('#notify').removeClass('is-active');
+        $('#notify').addClass('is-inactive');
+    });
+
+  });
+</script>
+{% elif request.user|permissions:"3" %}
+<script>
+  var channel = pusher.subscribe(`waiter-${user_id}`);
+  channel.bind('request_for_waiter', function (data) {
+    //alert(JSON.stringify('O Cliente ' + data.username + ' na mesa ' + data.table_name + ' da Table Zone ' + data.table_zone_name + ' está solicitando um atendimento'));
+    function TheOrder() {
+      $('#TheOrder').append(`<div id="content-dropdown-notify" class="dropdown-item ">
+      <div class="level is-marginless is-paddingless">
+        <div class="level-left">
+          <p class="is-size-7">`+ data.username + data.table_name + `</p>
+        </div>
+        <div class="level-right">
+          <p class="is-size-7"></p>
+        </div>
+      </div>
+      <p class="is-size-7 has-text-weight-normal">
+       `+ data.table_zone_name + ` Está solicitando atendimento
+      </>
+    </div>
+    <hr class="dropdown-divider">
+`);
+
+      PlaySound();
+      StartNotify(data.table_zone_name + " Solicitando atendimento");
+    }
+    TheOrder();
+
+    $('#delete').click(function () {
+        $('#notify').removeClass('is-active');
+        $('#notify').addClass('is-inactive');
+    });
+
+
+  });
+
+  channel.bind('payment_verification', function (data) {
+    //alert(JSON.stringify('O Cliente ' + data.username + ' realizou um pagamento. ' + 'O status atualmente é: ' + data.status + ' por favor, confirme ou rejeite.'));
+    function TheOrder() {
+      $('#TheOrder').append(`<div id="content-dropdown-notify" class="dropdown-item ">
+      <div class="level is-marginless is-paddingless">
+        <div class="level-left">
+          <p class="is-size-7">`+ data.username + `</p>
+        </div>
+        <div class="level-right">
+          <p class="is-size-7">`+ data.status + `</p>
+        </div>
+      </div>
+      <p class="is-size-7 has-text-weight-normal">
+       `+ data.username + ` Realizou o pagamento
+      </>
+    </div>
+    <hr class="dropdown-divider">
+`);
+
+      PlaySound();
+      StartNotify(data.username + " realizou o pagamento");
+    }
+    TheOrder();
+
+    $('#delete').click(function () {
+        $('#notify').removeClass('is-active');
+        $('#notify').addClass('is-inactive');
+    });
+
+  });
+
+  channel.bind('new_bill_waiter', function (data) {
+    //alert(JSON.stringify('Uma nova conta foi aberta, na mesa ' + data.table + '. O cliente está aguardando seu atendimento'));
+    function TheOrder() {
+      $('#TheOrder').append(`<div id="content-dropdown-notify" class="dropdown-item ">
+      <div class="level is-marginless is-paddingless">
+        <div class="level-left">
+          <p class="is-size-7">`+ data.table + `</p>
+        </div>
+        <div class="level-right">
+          <p class="is-size-7"></p>
+        </div>
+      </div>
+      <p class="is-size-7 has-text-weight-normal">
+       `+ data.table + ` O cliente está aguardando seu atendimento
+      </>
+    </div>
+    <hr class="dropdown-divider">
+`);
+
+      PlaySound();
+      StartNotify(data.table + " O cliente está aguardando seu atendimento");
+    }
+    TheOrder();
+
+    $('#delete').click(function () {
+        $('#notify').removeClass('is-active');
+        $('#notify').addClass('is-inactive');
+    });
+
+  });
+  channel.bind('makes_new_order', function (data) {
+    //alert(JSON.stringify('Novo Pedido Realizado ' + data.id));
+    CallNewCard();
+  });
+</script>
+{% elif request.user|permissions:"4" %}
+<script>
+  var channel = pusher.subscribe(`door_man-${user_id}`);
+  channel.bind('payment_confirm', function (data) {
+    //alert(JSON.stringify('O Cliente ' + data.username + ' Da mesa ' + data.table + ' Teve seu pagamento aprovado'));
+    function TheOrder() {
+      $('#TheOrder').append(`<div id="content-dropdown-notify" class="dropdown-item ">
+      <div class="level is-marginless is-paddingless">
+        <div class="level-left">
+          <p class="is-size-7">`+ data.username + `</p>
+        </div>
+        <div class="level-right">
+          <p class="is-size-7">`+ data.table + `</p>
+        </div>
+      </div>
+      <p class="is-size-7 has-text-weight-normal">
+       `+ data.table + data.username + ` Teve seu pagamento aprovado
+      </>
+    </div>
+    <hr class="dropdown-divider">
+    `);
+
+      PlaySound();
+      StartNotify(data.table + " O cliente" + data.username + " está aguardando seu atendimento");
+    }
+    TheOrder();
+
+    $('#delete').click(function () {
+        $('#notify').removeClass('is-active');
+        $('#notify').addClass('is-inactive');
+    });
+
+  });
+</script>
+{% endif %}

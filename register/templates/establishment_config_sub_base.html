@@ -1,0 +1,17 @@
+<div class="column is-full">
+    <div class="box">
+        <div class="media">
+            <div class="media-left">
+                <h2 class="is-size-5 has-text-primary has-text-weight-light">
+                    {% block title %}{% endblock %}
+                </h2>
+            </div>
+            <div class="media-content"></div>
+            <div class="media-right">
+                {% block buttons %}{% endblock buttons %}
+            </div>
+        </div>
+        {% block content %}
+        {% endblock content %}
+    </div>
+</div>

@@ -1,0 +1,214 @@
+{% extends 'components/establishment/establishment_component_base_nobtn.html' %}
+
+
+{% if establishment.opened %}
+<div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="dashboardSwitch"
+        checked>
+    <label class="onoffswitch-label" for="dashboardSwitch" checked></label>
+</div>
+{% else %}
+<div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="dashboardSwitch">
+    <label class="onoffswitch-label" for="dashboardSwitch"></label>
+</div>
+{% endif %}
+
+
+{% block title %}
+Configurações Extras
+{% endblock title %}
+
+{% block content %}
+
+
+{% if establishment.gps_restriction %}
+  <div class="level">
+    <div class="level-left is-min-width-25-em">
+      <label id="" for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+        Retiradas de Pedidos no Balcão
+      </label>
+    </div>
+    <div class="level-right ">
+      <div class="onoffswitch">
+        <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox promocodeswicth"
+          id="extras-featured-swicth-{{establishment.pk}}" checked>
+        <label class="onoffswitch-label" for="extras-featured-swicth-{{establishment.pk}}"></label>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="level">
+    <div class="level-left is-min-width-25-em">
+      <label id="" for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+        Retiradas de Pedidos no Balcão
+      </label>
+    </div>
+    <div class="level-right ">
+      <div class="onoffswitch">
+        <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox promocodeswicth"
+          id="extras-featured-swicth-{{establishment.pk}}">
+        <label class="onoffswitch-label" for="extras-featured-swicth-{{establishment.pk}}"></label>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+{% if establishment.featured %}
+  <div class="level">
+    <div class="level-left is-min-width-25-em">
+      <label id="" for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+        Estabelecimento em Destaque
+      </label>
+    </div>
+    <div class="level-right ">
+      <div class="onoffswitch">
+        <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox promocodeswicth"
+          id="extras-swicth-{{establishment.pk}}" checked>
+        <label class="onoffswitch-label" for="extras-swicth-{{establishment.pk}}"></label>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="level">
+    <div class="level-left is-min-width-25-em">
+      <label id="" for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+        Estabelecimento em Destaque
+      </label>
+    </div>
+    <div class="level-right ">
+      <div class="onoffswitch">
+        <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox promocodeswicth"
+          id="extras-swicth-{{establishment.pk}}">
+        <label class="onoffswitch-label" for="extras-swicth-{{establishment.pk}}"></label>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+{% if establishment.enabled %}
+<div class="level">
+  <div class="level-left is-min-width-25-em">
+    <label id="" for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+      Estabelecimento ativo
+    </label>
+  </div>
+  <div class="level-right ">
+    <div class="onoffswitch">
+      <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox promocodeswicth"
+        id="extras-swicth-enable_establishment" checked>
+      <label class="onoffswitch-label" for="extras-swicth-enable_establishment"></label>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="level">
+  <div class="level-left is-min-width-25-em">
+    <label id="" for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+      Estabelecimento ativo
+    </label>
+  </div>
+  <div class="level-right ">
+    <div class="onoffswitch">
+      <input type="checkbox" checkbox="true" name="onoffswitch" class="onoffswitch-checkbox promocodeswicth"
+        id="extras-swicth-enable_establishment">
+      <label class="onoffswitch-label" for="extras-swicth-enable_establishment"></label>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<script>
+  {% if establishment.featured %}
+    $("#extras-text-{{establishment.pk}}").each(function () { this.innerText = "Ativo"; });
+    $("#extras-swicth-{{establishment.pk}}").each(function () { this.checked = true; });
+  {% else %}
+    $("#extras-text-{{establishment.pk}}").each(function () { this.innerText = "Inativo"; });
+    $("#extras-swicth-{{establishment.pk}}").each(function () { this.checked = false; });
+  {% endif %}
+
+  $("#extras-swicth-{{establishment.pk}}").click(function (e) {
+    $.ajax({
+      url: "{% url 'register:establishment_update_featured' establishment.pk %}",
+      method: "GET"
+    })
+      .done(function (data) {
+        console.log('success', data);
+        if (data.opened) {
+          $("#extras-text-{{establishment.pk}}").each(function () { this.innerText = "Ativo"; });
+          //$("#extras-swicth-{{establishment.pk}}").each(function () { this.checked = true; });
+        } else {
+          $("#extras-text-{{establishment.pk}}").each(function () { this.innerText = "Inativo"; });
+          //$("#extras-swicth-{{establishment.pk}}").each(function () { this.checked = false; });
+        }
+      })
+      .fail(function (xhr) {
+        console.log('error', xhr);
+      });
+    e.stopImmediatePropagation();
+  });
+
+  {% if establishment.gps_restriction %}
+    $("#extras-featured-text-{{establishment.pk}}").each(function () { this.innerText = "Ativo"; });
+    $("#extras-featured-swicth-{{establishment.pk}}").each(function () { this.checked = true; });
+  {% else %}
+    $("#extras-featured-text-{{establishment.pk}}").each(function () { this.innerText = "Inativo"; });
+    $("#extras-featured-swicth-{{establishment.pk}}").each(function () { this.checked = false; });
+  {% endif %}
+
+  $("#extras-featured-swicth-{{establishment.pk}}").click(function (e) {
+    $.ajax({
+      url: "{% url 'register:establishment_update_gps_restriction' establishment.pk %}",
+      method: "GET"
+    })
+      .done(function (data) {
+        console.log('success', data);
+        if (data.opened) {
+          $("#extras-featured-text-{{establishment.pk}}").each(function () { this.innerText = "Ativo"; });
+          //$("#extras-featured-swicth-{{establishment.pk}}").each(function () { this.checked = true; });
+        } else {
+          $("#extras-featured-text-{{establishment.pk}}").each(function () { this.innerText = "Inativo"; });
+          //$("#extras-featured-swicth-{{establishment.pk}}").each(function () { this.checked = false; });
+        }
+      })
+      .fail(function (xhr) {
+        console.log('error', xhr);
+      });
+    e.stopImmediatePropagation();
+  });
+
+
+  {% if establishment.enabled %}
+    $("#extras-text-enable_establishment").each(function () { this.innerText = "Ativo"; });
+    $("#extras-swicth-enable_establishment").each(function () { this.checked = true; });
+  {% else %}
+    $("#extras-text-enable_establishment").each(function () { this.innerText = "Inativo"; });
+    $("#extras-swicth-enable_establishment").each(function () { this.checked = false; });
+  {% endif %}
+
+  $("#extras-swicth-enable_establishment").click(function (e) {
+    $.ajax({
+      url: "{% url 'register:establishment_update_enable' establishment.pk %}",
+      method: "GET"
+    })
+      .done(function (data) {
+        console.log('success', data);
+        if (data.opened) {
+          $("#extras-text-enable_establishment").each(function () { this.innerText = "Ativo"; });
+          //$("#extras-swicth-enable_establishment").each(function () { this.checked = true; });
+        } else {
+          $("#extras-text-enable_establishment").each(function () { this.innerText = "Inativo"; });
+          //$("#extras-swicth-enable_establishment").each(function () { this.checked = false; });
+        }
+      })
+      .fail(function (xhr) {
+        console.log('error', xhr);
+      });
+    e.stopImmediatePropagation();
+  });
+</script>
+
+{% endblock content %}

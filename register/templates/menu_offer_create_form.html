@@ -1,0 +1,41 @@
+{% load bulma_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section class="box" id="">
+  <h1 class="title is-4 has-text-primary has-text-weight-light">Adicionar Nova Oferta</h1>
+  <form method="POST" action="{% url 'register:menu_offer_create' establishment.id %}">
+    {% csrf_token %}
+    {{ form.name|bulma }}
+    {{ form.category|bulma }}
+    <div class="field">
+      <label class="label">Desconto para Oferta</label>
+      <div class="control">
+        <input type="number" name="discount" min="0,10" max="0,99" step="0.05" placeholder="0.10"
+          class="input" required="" id="id_discount" maxlength="4">
+      </div>
+    </div>
+    <button type="submit" class="button is-primary has-magt-2 is-complete">Salvar</button>
+  </form>
+</section>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+<script>
+  $(document).ready(function () {
+    $('input#id_discount').change(function () {
+      let discount_val = $('input#id_discount').val();
+      if(discount_val == 0.1){
+        $('input#id_discount').val(0.10);
+      }
+      if(discount_val == 0.2){
+        $('input#id_discount').val(0.20);
+      }
+      if(discount_val == 0.3){
+        $('input#id_discount').val(0.30);
+      }
+    });
+  });
+</script>
+{% endblock %}

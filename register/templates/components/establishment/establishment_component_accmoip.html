@@ -1,0 +1,74 @@
+{% extends 'components/establishment/establishment_component_base.html' %} 
+
+{% block title %}Conta Wirecard{% endblock %}
+ 
+{% block base_buttons %}
+    <div class="columns is-gapless is-multiline is-mobile">
+        {% if not moip_account.exists %}
+            <div class="column is-half">
+                <button id="activate_obs" class="button is-link is-outlined">
+                    <a id="card-offer-range-value" href="{% url 'register:wirecard_create' establishment.pk %}">Criar Conta Wirecard Pessoa - Fisica</a>
+                </button>
+            </div>
+            <div class="column is-half">
+                <button id="activate_obs" class="button is-link is-outlined">
+                    <a id="card-offer-range-value" href="{% url 'register:wirecard_company_create' establishment.pk %}">Criar Conta Wirecard - Pessoa Juridica</a>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+{% block content %}
+
+  {% for moip_account in moip_account %}
+
+    <div class="level is-border-bottom has-padb-2">
+        <div class="level-left">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">WireCard:</label>
+        </div>
+        <div class="level-right">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">ID {{ moip_account.id_wirecard }}</label>
+        </div>
+    </div>
+
+    <div class="level is-border-bottom has-padb-2">
+        <div class="level-left">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Login:</label>
+        </div>
+        <div class="level-right">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ moip_account.login }}</label>
+        </div>
+    </div>
+
+    <div class="level is-border-bottom has-padb-2">
+        <div class="level-left">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Nome:</label>
+        </div>
+        <div class="level-right">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">{{ moip_account.name }}</label>
+        </div>
+    </div>
+
+    <div class="level is-border-bottom has-padb-2">
+        <div class="level-left">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Detalhes:</label>
+        </div>
+        <div class="level-right">
+            <a href="{% url 'register:wirecard_detail' moip_account.pk%}"><i class="fas fa-info"></i></a>
+        </div>
+    </div>
+
+  {% empty %}
+
+  <div class="level is-border-bottom has-padb-2">
+    <div class="level-left">
+        <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Sem Conta Wirecard</label>
+    </div>
+  </div>
+
+  {% endfor %}
+
+{% endblock content %}
+

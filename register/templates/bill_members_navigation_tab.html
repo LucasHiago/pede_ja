@@ -1,0 +1,10 @@
+{% extends 'nav_tabs.html' %}
+
+{% block tab_elements %}
+<li {% if request.resolver_match.url_name == "bill_member_on_bill_list" %} class="is-active" {% endif %}>
+    <a href="{% url 'register:bill_member_on_bill_list' bill.pk %}">Clientes</a>
+</li>
+<li {% if request.resolver_match.url_name == "orders_from_bill" %} class="is-active" {% endif %}>
+    <a href="{% url 'register:orders_from_bill' bill.pk %}">Pedidos da Mesa</a>
+</li>
+{% endblock tab_elements %}

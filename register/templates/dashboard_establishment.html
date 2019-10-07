@@ -1,0 +1,392 @@
+{% extends 'establishment_base.html' %}
+{% load thumbnail %}
+{% load humanize %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container is-fluid">
+
+    <div class="level">
+        <div class="level-left">
+            {% if not request.user.is_superuser %}
+            <div class="level-item">
+                <h1 class="is-size-3 has-text-primary">Dashboard</h1>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="level-right">
+            <div class="level-item">
+                <div class="columns is-vcentered">
+                    <div class="column is-one-fifth">
+                        {% if establishment.opened %}
+                        <p id="dashboardText" class="is-size-6">Aberto</p>
+                        {% else %}
+                        <p id="dashboardText" class="is-size-6">Fechado</p>
+                        {% endif %}
+                    </div>
+                    <div class="column is-one-fifth">
+                        {% if establishment.opened %}
+                        <div class="onoffswitch">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="dashboardSwitch"
+                                checked>
+                            <label class="onoffswitch-label" for="dashboardSwitch" checked></label>
+                        </div>
+                        {% else %}
+                        <div class="onoffswitch">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="dashboardSwitch">
+                            <label class="onoffswitch-label" for="dashboardSwitch"></label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="column is-three-fifths">
+                        <form id="month-filter-form"
+                            action="{% url 'register:establishment_dashboard' establishment.id %}" method="get"
+                            accept-charset="utf-8">
+                            <label class="subtitle is-7">Filtrar por mês:</label>
+                            <div class="select is-small">
+                                <select name="month-filter">
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns">
+        <div class="column is-one-quarter">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i
+                                    class="fas fa-2x fa-money-bill noruh_data_faturamento"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4 faturamento">R$ {{billing|default_if_none:"0"|intcomma}}</p>
+                            <p class="subtitle is-6 faturamento-mes">Faturamento:
+                                <strong>{{filter_date|date:'F'}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-quarter">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i
+                                    class="fas fa-2x fa-shopping-cart noruh_data_pedido"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4 pedido">{{ n_all_orders }}</p>
+                            <p class="subtitle is-6 pedido-mes">Total de pedidos:
+                                <strong>{{filter_date|date:'F'}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-quarter">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i class="fas fa-2x fa-chart-line noruh_data_acesso"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4 acesso">R$ {{average_ticket|default_if_none:"0"|intcomma}}</p>
+                            <p class="subtitle is-6 acesso-mes">Ticket Médio: <strong>{{filter_date|date:'F'}}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-quarter">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i
+                                    class="fas fa-2x fa fa-clipboard noruh_data_faturamento"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4 faturamento">R$
+                                {{report_offline_payment_value|default_if_none:"0"|intcomma}}</p>
+                            <p class="subtitle is-6 acesso-mes">Repasse Offline:
+                                <strong>{{filter_date|date:'F'}}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column is-full">
+        <div class="card">
+            <div class="card-content">
+                <div class="level">
+                    <div class="level-left">
+                        <p class="subtitle is-6 has-text-primary"> {{variable_name_filter}} </p>
+                    </div>
+                    <div class="level-right">
+                        <form id="type_filter_form"
+                            action="{% url 'register:establishment_dashboard' establishment.id %}" method="get"
+                            accept-charset="utf-8" id="formGraphicEstablishments">
+                            <label class="subtitle is-7">Filtrar por:</label>
+                            <div class="select is-small">
+                                <select name="type_filter" id="filter_by_chart">
+                                    <option value selected="all_billing">Faturamento Total</option>
+                                    <option value="all_bills">Total de Contas</option>
+                                    <option value="all_orders">Total de Pedidos</option>
+                                    <option value="payment_online">Pagamento Online</option>
+                                    <option value="payment_offline">Pagamento Offline</option>
+                                    <option value="moip_taxe">Taxa Moip</option>
+                                    <option value="evaluation_average">Média de Avaliações</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="chart-container" style="position: relative; height:25em; width:auto">
+                    <canvas id="faturamento-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column is-full">
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="subtitle is-5">Itens mais pedidos</p>
+                    </div>
+                    <div class="media-right">
+                        <a href="{% url 'register:establishment_items_more_requested' establishment.pk %}">Ver Todos</a>
+                    </div>
+                </div>
+                {% for order in more_requested %}
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img class="is-rounded" src="{% thumbnail order.item__photo 60x60 crop %}" alt="" />
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p>{{order.item__name}}</p>
+                    </div>
+                    <div class="media-right">
+                        <p>{{order.pedidos}}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="media">
+                    <div class="media-content">
+                        <p>Sem itens.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra-js %}
+<script>
+
+    /* Filtering the data from dashboard by month */
+    // Filtering by type
+
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        }
+        return decodeURI(results[1]) || 0;
+    }
+
+
+    $('select[name=type_filter]').val($.urlParam('type_filter'));
+
+    $('form#type_filter_form').submit(function (event) {
+        event.preventDefault();
+
+        console.log()
+
+        var path = window.location.pathname;
+
+        var search = window.location.search;
+
+        var query = $('select[name=type_filter]').val();
+
+        if (search.includes("month-filter")) {
+            if (search.includes("type_filter")) {
+                search = location.search.split("&");
+                location.replace(path.concat(search[0] + "&type_filter=" + query));
+            } else {
+                location.replace(path.concat(search + "&type_filter=" + query));
+            }
+        } else {
+            location.replace(path.concat("?type_filter=" + query));
+        }
+    });
+
+    $('select[name=type_filter]').change(function () {
+        $('form#type_filter_form').submit();
+    });
+
+    // Filtering by month
+
+    $('select[name=month-filter]').val("{{ month_name }}");
+
+    $('select[name=month-filter]').change(function () {
+        $('form#month-filter-form').submit();
+    });
+
+
+
+
+
+
+    $(function () {
+        $('#ranking').tablesorter();
+    });
+
+    var switchUrl = "{% url 'register:establishment_update_open_close' establishment.id %}";
+
+
+    {% if establishment.opened %}
+    $('#dashboardText').each(function () { this.innerText = "Aberto"; });
+    $('#dashboardSwitch').each(function () { this.checked = true; });
+    {% else %}
+    $('#dashboardText').each(function () { this.innerText = "Fechado"; });
+    $('#dashboardSwitch').each(function () { this.checked = false; });
+    {% endif %}
+
+    $(document).ready(function () {
+        //card text selector
+        $("p[class$='-mes']").each(function () {
+            var currentText = $(this).text();
+            if (!currentText.includes($("#filter_by_last_month option:selected").text())) {
+                $(this).text(currentText + " (" + $("#filter_by_last_month option:selected").text() + ")");
+            }
+        })
+    });
+
+    $(document).on("change", "#filter_by_last_month", function () {
+        $("p[class$='-mes']").each(function () {
+            $(this).text(function () {
+                return $(this).text().replace(/\(.+\)/g, '(' + $("#filter_by_last_month option:selected").text() + ')');
+            });
+        })
+    });
+    $("#dashboardSwitch").click(function (e) {
+        $.ajax({
+            url: switchUrl,
+            method: "GET"
+        })
+            .done(function (data) {
+                console.log(data);
+                if (data.opened) {
+                    $('#dashboardText').each(function () { this.innerText = "Aberto"; });
+                    $('#dashboardSwitch').each(function () { this.checked = true; });
+                } else {
+                    $('#dashboardText').each(function () { this.innerText = "Fechado"; });
+                    $('#dashboardSwitch').each(function () { this.checked = false; });
+                }
+            })
+            .fail(function (xhr) {
+            });
+        e.stopImmediatePropagation();
+    })
+</script>
+
+<script>
+    var ctx = document.getElementById("faturamento-chart").getContext('2d');
+
+    var months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+    var data = [];
+    var labels = [];
+    var LabelValue = 'R$';
+
+    if (document.getElementById('filter_by_chart').value == "all_billing") {
+        LabelValue = 'R$';
+    }
+    if (document.getElementById('filter_by_chart').value == "all_bills") {
+        LabelValue = 'Unidades';
+    }
+    if (document.getElementById('filter_by_chart').value == "all_orders") {
+        LabelValue = 'Unidades';
+    }
+    if (document.getElementById('filter_by_chart').value == "payment_online") {
+        LabelValue = 'R$';
+    }
+    if (document.getElementById('filter_by_chart').value == "payment_offline") {
+        LabelValue = 'R$';
+    }
+    if (document.getElementById('filter_by_chart').value == "moip_taxe") {
+        LabelValue = 'R$';
+    }
+    if (document.getElementById('filter_by_chart').value == "evaluation_average") {
+        LabelValue = 'Pontos';
+    }
+
+    {% for revenue in revenues %}
+    var MonthTrated = {{ revenue.month }};
+    var ValueTrate = "{{ revenue.value }}";
+    var ValueTrated = ValueTrate.replace(',', '.');
+    labels.push(months[MonthTrated - 1]);
+    data.push(ValueTrated);
+    {% endfor %}
+
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: LabelValue,
+                data: data,
+                backgroundColor: 'rgba(86, 77, 221, 0.2)',
+                borderColor: 'rgba(86, 77, 221, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            elements: {
+                line: {
+                    tension: 0, // disables bezier curves
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+{% endblock %}

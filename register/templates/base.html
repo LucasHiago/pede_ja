@@ -1,0 +1,50 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noruh {% block title %}{% endblock %}</title>
+    <link href="{% static 'dashboard-ui/noruh-dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard-ui/custom.css' %}" rel="stylesheet">
+    <script src="{% static "js/custom.js" %}"></script>
+    {% block extra-css %}{% endblock %}
+    <script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+</head>
+
+<button id="btn_collapsed" onclick="btnCollapsed()" class="btn_collapse is-hidden-mobile"><i class="fas fa-chevron-left"></i></button>
+<button id="btn_collapsing" onclick="btnCollapsing()" class="btn_collapsing is-inactive is-hidden-mobile"><i class="fas fa-chevron-right"></i></button>
+<body id="collapse-body" class="has-nav-left">
+    {% if user.employee or user.is_superuser %}
+        {% include 'base_sidenav.html' %}
+    {% endif %}
+
+    {% if user.employee or user.is_superuser %}
+        {% block nav-top %}
+            {% include 'base_topnav.html' %}
+        {% endblock %}
+    {% endif %}
+
+    {% if user.employee or user.is_superuser %}
+        {% block pusher %}
+            {% include 'pusher.html' %}
+        {% endblock %}
+    {% endif %}
+
+    {% block body %}{% endblock %}
+    <script type="text/javascript" src="{% static 'dashboard-ui/noruh-dashboard.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dashboard-ui/jquery_min_ui.js' %}"></script>
+    <script src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.js"></script>
+    <script src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js"></script>
+    <script src="https://mottie.github.io/tablesorter/addons/pager/jquery.tablesorter.pager.js"></script>
+    {% block extra-js %}{% endblock %}
+</body>
+
+</html>

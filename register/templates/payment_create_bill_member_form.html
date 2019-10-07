@@ -1,0 +1,124 @@
+{% load thumbnail %}
+
+<div class="container is-fluid is-clipped">
+    <div class="columns is-centered">
+        <div class="column p">
+            <div class="card">
+                <div class="card-content">
+                    <section>
+                        <div class="columns is-centered">
+                            <div class="column is-two-fifths">
+                                <figure class="image is-64x64" style="margin: auto">
+                                    {% if bill_member.customer.profile.image_url %}
+                                    <img class="is-rounded"
+                                        src="{% thumbnail bill_member.customer.profile.image_url 60x60 crop %}" alt="">
+                                    {% else %}
+                                    <img src="https://via.placeholder.com/64" alt="" class="is-rounded">
+                                    {% endif %}
+                                </figure>
+                                <br></br>
+                                <p class="title is-6 has-text-primary has-text-centered">
+                                    {{ bill_member.customer.first_name|default:"Cliente" }}</p>
+                            </div>
+                        </div>
+                    </section>
+                    {% for order in bill_member.order %}
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">{{ order.quantity }}x&nbsp;</p>
+                            <p> {{ order.item.name }} </p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{ order.total_price }} </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="level">
+                        <div class="border-bottom-payment"></div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">Parcial</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$
+                                {{bill_member.value_consumed_without_taxes|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p>10% (opcional)</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{bill_member.calc_service_tax|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">1x&nbsp;</p>
+                            <p>Couvert</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{bill_member.bill.establishment.taxe_couvert}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p>Taxa Noruh (opcional)</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$
+                                {{bill_member.bill.establishment.noruh_fee|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="border-bottom-payment"></div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">TOTAL&nbsp;</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{bill_member.value_consumed|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    {% comment %}
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">1x&nbsp;</p>
+                            <p>Valor Consumido</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold">R$
+                                {{bill_member.value_consumed_without_tax_percentage|floatformat:2}} </p>
+                        </div>
+                    </div>
+                    {% endcomment %}
+                    <form id="payment_form">
+                        {% csrf_token %}
+                        <input id="payment_value" class="input is-medium has-text-centered" type="text" name="value"
+                            value={{bill_member.value_consumed|floatformat:2}}><br>
+                        <p class="subtitle is-7 has-text-centered">Pague o valor cheio, ou outro valor</p>
+                        {% comment %}
+                        Essa view ainda não está programada para receber o status do pagamento.
+                        <section>
+                            <p class="title is-5">Status do Pagamento</p>
+                            <div class="select is-fullwidth">{{ form.status_payment }}</div>
+                        </section>
+                        {% endcomment %}
+                        <button id="submit" onclick="submitPayment()" class="button is-primary is-fullwidth"
+                            value="Fechar Conta do Usuário">Fechar Conta do Usuário</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

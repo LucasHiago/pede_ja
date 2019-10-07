@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noruh Dashboard UI - Forms</title>
+</head>
+
+<body class="has-nav-left">
+  <!-- Start nav -->
+  <nav class="nav-left">
+    <div class="nav-left__wrapper">
+      <a class="media nav-left__profile has-text-white">
+        <div class="media-left nav-left__profile__avatar">
+          {% if user.employee %}
+            {% if user.employee.image %}
+            <img src="{{ user.employee.image|thumbnail_url:'dashboard_user_avatar' }}" />
+            {% else %}
+            <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+            {% endif %}
+          {% else %}
+          <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+          {% endif %}
+        </div>
+        <div class="media-content is-hidden-mobile">
+          <div>Noruh User</div>
+          <div class="has-text-grey-light">User Role</div>
+        </div>
+      </a>
+      <div class="nav-left__pages">
+        <a href="index.html">
+          <i class="fa fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="layout.html">
+          <i class="fa fa-th-large"></i>
+          <span>Layout</span>
+        </a>
+        <a href="list.html">
+          <i class="fas fa-list-ul"></i>
+          <span>List and Filter</span>
+        </a>
+        <a href="forms.html" class="actived">
+          <i class="fab fa-wpforms"></i>
+          <span>Forms</span>
+        </a>
+      </div>
+      <div class="nav-left__action">
+        <a class="button is-highlight is-rounded is-medium is-fullwidth">Sair</a>
+        <a class="icon fa fa-sign-out-alt"></a>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="nav-top">
+    <div class="columns">
+      <div class="column">
+        <div class="control has-icons-left">
+          <span class="icon is-small is-left">
+            <i class="fas fa-search"></i>
+          </span>
+          <input class="input is-transparent" type="text" placeholder="Busque por usuários e estabelecimentos" />
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="dropdown is-right" data-dropdown>
+          <div class="dropdown-trigger">
+            <button class="button icon has-text-grey icon-notification">
+              <span class="icon is-small">
+                <i class="far fa-bell"></i>
+              </span>
+              <span class="icon dot is-small">
+                <i class="fas fa-circle"></i>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-item">
+                <p>Notification 1</p>
+              </div>
+              <hr class="dropdown-divider">
+              <a href="#" class="dropdown-item">Notification Link 2</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- End nav -->
+
+  <section>
+    <h3 class="title is-3">Forms</h3>
+    <div class="columns">
+      <div class="column is-half">
+        <div class="card has-padding">
+          <h4 class="title is-4 has-text-weight-normal">Comodidades</h4>
+          <table class="table is-fullwidth">
+            <tbody>
+              <tr>
+                <td>
+                  <div class="media">
+                    <div class="media-content">
+                      <i class="fas fa-wifi"></i>
+                      <span>Wifi</span>
+                    </div>
+                    <div class="media-right">
+                      <div class="select">
+                        <select>
+                          <option>Ativado</option>
+                          <option>Desativado</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="media">
+                    <div class="media-content">
+                      <i class="fas fa-car"></i>
+                      <span>Estacionamento</span>
+                    </div>
+                    <div class="media-right">
+                      <div class="select">
+                        <select>
+                          <option>Ativado</option>
+                          <option selected>Desativado</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="has-text-right">
+            <button class="button is-primary">Salvar</button>
+          </div>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="card has-padding">
+          <div class="media">
+            <div class="media-content">
+              <h4 class="title is-4 has-text-weight-normal">Horários</h4>
+            </div>
+            <div class="media-rigth">
+              <button data-modal-trigger="#add-opening-hour" class="button is-primary">Novo horário</button>
+              <button class="button is-primary is-outlined">Salvar</button>
+            </div>
+          </div>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>Dias</th>
+                <th>Abre</th>
+                <th>Fecha</th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Segunda à sexta</td>
+                <td>
+                  <div class="select">
+                    <select>
+                      <option>08:00</option>
+                      <option>08:30</option>
+                      <option>09:00</option>
+                      <option>09:30</option>
+                      <option>10:00</option>
+                      <option>10:30</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <div class="select">
+                    <select>
+                      <option>08:00</option>
+                      <option>08:30</option>
+                      <option>09:00</option>
+                      <option>09:30</option>
+                      <option selected>10:00</option>
+                      <option>10:30</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <button class="button is-white"><i class="fa fa-times"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Sábado</td>
+                <td>
+                  <div class="select">
+                    <select>
+                      <option>08:00</option>
+                      <option selected>08:30</option>
+                      <option>09:00</option>
+                      <option>09:30</option>
+                      <option>10:00</option>
+                      <option>10:30</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <div class="select">
+                    <select>
+                      <option>08:00</option>
+                      <option>08:30</option>
+                      <option>09:00</option>
+                      <option>09:30</option>
+                      <option>10:00</option>
+                      <option selected>10:30</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <button class="button is-white"><i class="fa fa-times"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="add-opening-hour" class="modal">
+    <div data-modal-close class="modal-background"></div>
+    <div class="modal-content">
+      <div class="modal-card">
+        <div class="modal-card-head">Adicionar novo horário</div>
+        <div class="modal-card-body">
+          <div class="field">
+            <label class="label">Periodo</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Ex: Segunda à sexta, Domingo...">
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-narrow">
+              <div class="field">
+                <label class="label">Abre</label>
+                <div class="control">
+                  <div class="select">
+                    <select>
+                      <option>08:00</option>
+                      <option>08:30</option>
+                      <option>09:00</option>
+                      <option>09:30</option>
+                      <option>10:00</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column is-narrow">
+              <div class="field">
+                <label class="label">Fecha</label>
+                <div class="control">
+                  <div class="select">
+                    <select>
+                      <option>08:00</option>
+                      <option>08:30</option>
+                      <option>09:00</option>
+                      <option>09:30</option>
+                      <option>10:00</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-card-foot">
+          <button class="button is-primary">Adicionar</button>
+          <button type="reset" data-modal-close class="button">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <button data-modal-close class="modal-close is-large" aria-label="close"></button>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+{% extends 'establishment_base.html' %}
+
+{% load load_permissions %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block content %}
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="columns is-multiline">
+            {% if not request.user.is_superuser %}
+            <div class="column is-full">
+                <h1 class="is-title is-size-3 has-text-primary">Pedidos</h1>
+            </div>
+            {% endif %}
+            <div class="column is-full">
+                <div class="level">
+                    <div class="level-left">
+                        <form action="{% url 'register:orders_filter_by_table' establishment.id %}" id="searchform">
+                            <div class="field is-horizontal">
+                                <div class="level-item">
+                                    <p class="is-size-6">Filtrar por mesa:</p>
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="level-item">
+                                            <div class="select">
+                                                <select name="table">
+                                                    <option></option>
+                                                    {% for table in tables %}
+                                                        <option value={{table.id}}>
+                                                        {% if table.name == 'order_remote' %}
+                                                            Retirar no Balcao
+                                                        {% else %}
+                                                            {{ table.name }}
+                                                        {% endif %}                                           
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="level-item">
+                                            <div class="field has-addons">
+                                                <p class="control has-icons-left">
+                                                    <input type="search" class="input"
+                                                        placeholder="Busque pelo nome do usuario" name="first_name">
+                                                    <span class="icon is-small is-left">
+                                                        <i class="fas fa-search"></i>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            {% if request.resolver_match.url_name == "orders_filter_by_table" %}
+                            <a class="button" href="{% url 'register:orders_list' establishment.id %}">Remover
+                                Filtro</a>
+                            {% endif %}
+                        </div>
+                        <div class="level-item">
+                            <a class="button is-link" id="activate_item"
+                                onclick="createOrder('{% url 'register:order_create' establishment.id %}')">Fazer
+                                Pedido</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-full">
+                <div class="box">
+                    <h3 class="subtitle is-5 has-text-primary">Pedidos</h3>
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <th>Numero do Pedido</th>
+                            <th>Qtd</th>
+                            <th>Item</th>
+                            <th>Mesa</th>
+                            <th>Usuario</th>
+                            <th>Status</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            {% for item in all_items %}
+                            <tr>
+                                <td>#{{item.id}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.item.name}}</td>
+                                <td>
+                                    {% if item.bill.table.name == 'order_remote' %}
+                                        Retirar no Balcao
+                                    {% else %}
+                                        {{ item.bill.table }}
+                                    {% endif %}                                           
+                                </td>
+                                <td>{{item.user.first_name}}</td>
+                                <td>
+                                    {% if item.status == item.STATUS_PENDING %}
+                                    <span class="tag is-normal is-rounded is-light">Aguardando</span>
+                                    {% elif item.status == item.STATUS_DONE %}
+                                    <span class="tag is-normal is-success is-rounded">Pronto</span>
+                                    {% elif item.status == item.STATUS_PREPARING %}
+                                    <span class="tag is-normal is-warning is-rounded">Preparando</span>
+                                    {% elif item.status == item.STATUS_REJECTED %}
+                                    <span class="tag is-normal is-danger is-rounded">Cancelado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.status == item.STATUS_PENDING %}
+                                    <div class="buttons are-small">
+                                        <a class="button is-outlined is-primary"
+                                            href="{% url 'register:order_cancel_button_on_list_orders' item.pk %}">Cancelar</a>
+                                    </div>
+                                    {% elif item.status == item.STATUS_PREPARING %}
+                                    <div class="buttons are-small">
+                                        <a class="button is-outlined is-primary"
+                                            href="{% url 'register:order_cancel_button_on_list_orders' item.pk %}">Cancelar</a>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td>Sem Pedidos</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if is_paginated %}
+                    {% include 'pagination.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+{% comment %}
+{% if item.status == item.STATUS_PENDING %}
+<a href="{% url 'register:order_kitchen_accepted_at' item.pk %}"> Aceitar ou Rejeitar Pedido </a>
+
+{% elif item.status == item.STATUS_REJECTED %}
+Essa pedido foi cancelada às: {{ item.canceled_at|date:'g:i a' }}
+
+{% elif item.status == item.STATUS_PREPARING %}
+Esse pedido foi aceito às: {{ item.kitchen_accepted_at|date:'g:i a' }}
+<a href="{% url 'register:order_kitchen_accepted_at' item.pk %}"> Finalizar ou Cancelar Pedido </a>
+
+{% elif item.status == item.STATUS_DONE %}
+Esse pedido foi finalizado às: {{ item.kitchen_finished_at|date:'g:i a' }}
+
+{% endif %}
+{% endcomment %}
+
+{% endblock %}
+
+{% block extra-js %}
+<script>
+
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        }
+        return decodeURI(results[1]) || 0;
+    }
+
+    {% if request.resolver_match.url_name == "orders_filter_by_table" %}
+    $('select[name=table]').val($.urlParam('table'));
+    {% endif %}
+
+    $('select[name=table]').change(function () {
+        $('form#searchform').submit();
+    })
+
+    var confirm_order_url = "";
+
+    function createOrder(url) {
+
+        confirm_order_url = url;
+
+        $.get(url, function () {
+            //console.log(url);
+        })
+
+            .done(function (data) {
+                //console.log(data);
+                $(".modal > .modal-content").html(data);
+                $(".modal").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+
+            .fail(function (xhr) {
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(this).parents(".modal").removeClass("is-active");
+        });
+    }
+
+    function submitOrder() {
+        $.post(confirm_order_url, $('#order-form').serialize())
+
+            .done(function (data) {
+                location.reload();
+            })
+
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+    }
+
+    function closeModal(event) {
+        $(".modal").removeClass("is-active");
+    }
+
+
+
+</script>
+{% endblock %}

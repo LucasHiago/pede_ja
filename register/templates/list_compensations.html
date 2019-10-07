@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block title %}Valores de Repasse{% endblock %}
+
+{% block body %}
+<div class="container is-fluid">
+  <div class="columns is-multiline">
+    <div class="column is-full">
+      <h1 class="is-size-3 has-text-primary">Repasse Offline</h1>
+    </div>
+    <div class="column is-three-fifths">
+      <form id="establishment-filter-form" action="{% url 'register:offline_compensations' %}" method="get" accept-charset="utf-8">
+        <label class="subtitle is-7">Selecione o estabelecimento:</label>
+        <div class="select is-small">
+          <select name="establishment-filter">
+            {% for est in all_establishments %}
+              <option value="{{est.id}}"{% if est.id == establishment.id %} selected="selected"{% endif %}>{{est.name}}</option>
+            {% empty %}
+              <option value="">Sem estabelecimentos</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% if request.resolver_match.url_name == "offline_compensations_filter" %}
+          <a class="button" href="{% url 'register:offline_compensations' %}">Remover Filtro</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+  <div class="columns is-multiline">
+    <div class="column is-full">
+      <div class="media align-center">
+        <div class="media-left image">
+          <img class="is-rounded" src="{{ establishment.logo_url|thumbnail_url:'dashboard_establishment_logo'|default:"https://via.placeholder.com/64" }}" />
+        </div>
+        <div class="media-content">
+          <h3 class="is-size-3 ">{{ establishment.name }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="column is-full">
+      <div class="box">
+        <table class="table is-fullwidth is-striped">
+          <thead>
+            <th>Mês</th>
+            <th>Valor</th>
+            <th>Detalhes</th>
+            <th>Data da Cobrança</th>
+          </thead>
+          <tbody>
+            {% for payment in payments %}
+              <tr>
+                <td>{{payment.date|date:'F'}} de {{payment.y}}</td>
+                <td>R$ {{payment.compensation_value|floatformat:2}}</td>
+                <td><a href="{% url 'register:offline_compensations_generate_report' payment.m payment.y payment.establishment_id %}">Baixar CSV</a></td>
+                <td>
+                  {% if payment.compensation == False %}
+                    <a href="{% url 'register:offline_compensations_check_month' payment.m payment.y payment.establishment_id %}">Pago</a>
+                  {% else %}
+                    {{payment.compensation}}
+                  {%endif %}
+                </td>    
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $('select[name=establishment-filter]').change(() => {
+    $('form#establishment-filter-form').submit();
+  });
+</script>
+
+{% endblock %}

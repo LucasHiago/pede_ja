@@ -1,0 +1,193 @@
+{% load bulma_tags %}
+{% load widget_tweaks %}
+<div class="container is-clipped">
+  <div class="columns is-centered">
+    <div class="column is-half-desktop is-full-tablet">
+      <div class="box">
+        <p class="title is-4 has-text-primary has-text-weight-light">Fazer Pedido</p>
+        <form method="post" id="order-form" data-bill_members-url="{% url 'register:ajax_load_bill_members' %}"
+          novalidate>
+          {% csrf_token %}
+          <div class="columns">
+            <div class="column is-9">
+              {{form.menu_item|bulma}}
+              <div class="ui-widget ui-widget-content results"></div>
+            </div>
+            <div class="column is-3">
+              {{ form.quantity|bulma }}
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-half">
+              {{ form.bill|bulma }}
+              <div class="ui-widget ui-widget-content results"></div>
+            </div>
+            <div class="column is-half">
+              {{ form.user|bulma }}
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-full">
+              <div class="field">
+                <label class="label">Observações: </label>
+                {% render_field form.observation class="input" %}
+              </div>
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-half"><a id="cancel" onclick="closeModal()" class="button is-danger is-fullwidth"
+                type="cancel"> Cancelar </a></div>
+            <div class="column is-half">
+              <a id="submit" onclick="makeOrder()" class="button is-primary is-fullwidth" value="Fazer pedido">Fazer pedido</a>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for menu_item in menu_items %}
+<input id="menu_item_{{menu_item.id}}" type="hidden" name="{{menu_item}}" value="{{menu_item.id}}" />
+{% endfor %}
+
+{% for bill in bills %}
+  <input id="bill_{{bill.id}}" type="hidden" name="{{bill}}" value="{{bill.id}}" />
+{% endfor %}
+
+<script>
+  // Auto Complete for Menu Item Field
+  var btn_item = $('input#id_menu_item.input.ui-autocomplete-input');
+  var ui_hidden_acessible = $('.ui-helper-hidden-accessible');
+
+  $(function() {
+    var src = [
+
+      {% for menu_item in menu_items %}  
+      {% if not menu_item %}
+
+  "Nenhum Resultado"
+
+  {% else %}
+
+  { id: "{{menu_item.id}}", value: "{{menu_item.name}}", label: "{{menu_item.id}} | {{menu_item}}" },
+
+  {% endif %}
+  {% endfor %}
+      
+    ];
+
+  $("#id_menu_item").autocomplete({
+    source: function(request, response) {
+      var results = $.ui.autocomplete.filter(src, request.term);
+      response(results.slice(0, 10));
+    }
+  });
+  });
+
+  $(document).ready(function () {
+    $('.ui-helper-hidden-accessible').addClass('z-index-hidden');
+  });
+
+  //Auto complete for Bill when user input the name of table
+  var btn_item = $('input#id_bill.input.ui-autocomplete-input');
+  var ui_hidden_acessible = $('.ui-helper-hidden-accessible');
+  var table_id = 0;
+
+  $(function() {
+    var src = [
+
+      {% for bill in bills %}  
+      {% if not bill %}
+
+  "Nenhum Resultado"
+
+  {% else %}
+
+  { id: "{{bill.id}}", value: "{{bill.table.name}}", label: "{{bill.id}} | {{bill.table.name}}" },
+
+  {% endif %}
+  {% endfor %}
+      
+    ];
+
+  $("#id_bill").autocomplete({
+    source: function(request, response) {
+      var results = $.ui.autocomplete.filter(src, request.term);
+      response(results.slice(0, 10));
+    }, 
+    select: function(event, ui) {
+      table_id = ui.item.id;
+    }
+  });
+  });
+
+  $(document).ready(function () {
+    $('.ui-helper-hidden-accessible').addClass('z-index-hidden');
+  });
+
+// Function to call a view and load bill_members from a specific bill
+  $("#id_bill").blur(function () {
+    var url = $("#order-form").attr("data-bill_members-url");
+
+    $.ajax({
+      url: url,
+      data: {
+        'table_id': table_id
+      },
+      success: (data) => {
+        $("#id_user").html(data);
+      }
+    });
+
+  });
+
+  function makeOrder() {
+    $("#id_bill").val(table_id);
+    submitOrder();
+    
+    }
+
+</script>
+
+<style>
+  .ui-helper-hidden-accessible {
+    position: fixed;
+    background: #564ddd;
+    color: white;
+    left: 43%;
+    padding: 15px;
+    top: 10px;
+    border-radius: .3em;
+  }
+
+  .z-index-hidden {
+    display: none;
+  }
+
+  .z-index-show {
+    z-index: 9999;
+    display: block;
+  }
+
+  .ui-menu {
+    max-height: 200px;
+    z-index: 9999;
+    overflow-y: scroll;
+    position: absolute;
+  }
+
+  li.ui-menu-item {
+    background: white;
+    border-bottom: 1px solid #dbdbdb;
+    border-left: 1px solid #dbdbdb;
+    padding-bottom: .5em;
+    padding-top: .5em;
+    padding-left: .5em;
+    border-right: 1px solid #dbdbdb;
+  }
+
+  li.ui-menu-item:hover {
+    background: #dbdbdb;
+  }
+</style>

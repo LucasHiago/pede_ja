@@ -1,0 +1,112 @@
+{% load widget_tweaks %}
+{% load static %}
+
+<div class="box" id="CreateItemOnMenu">
+  <p class="title is-4 has-text-primary has-text-weight-light">Adicionar item</p>
+  <form id="item_create" action="{% url 'register:menu_create_item' establishment_id %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="columns">
+        <div class="column is-two-thirds">
+            <div class="field">
+                <label for={{form.name.id_for_label}} class="label has-text-weight-light">Nome</label>
+                <div class="control">
+                    {{ form.name}}
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label for="{{form.photo.id_for_label}}" class="label image is-96x96" style="cursor:pointer;">
+                    <img id="dish_thumb" src="{% static "images/icon-gallery.png" %}" alt="">
+                </label>
+                <div class="control image-employee">
+                    {{form.photo}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label for="{{form.description.id_for_label}}" class="label has-text-weight-light">Descrição</label>
+        <div class="control">
+            {% render_field form.description class="input" %}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-half">
+            <div class="field">
+                <label for="{{form.preparation_time.id_for_label}}" class="label has-text-weight-light">Tempo de preparo</label>
+                <div class="control">
+                    {{form.preparation_time}}
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label for="{{form.serve_up.id_for_label}}" class="label has-text-weight-light">Serve</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        {{form.serve_up}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label for="{{form.observations.id_for_label}}" class="label has-text-weight-light">Adicionar opções de observações</label>
+        <div class="control">
+            <div class="select is-multiple is-fullwidth">
+                {{form.observations}}
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label for="{{form.price.id_for_label}}" class="label has-text-weight-light">Adicione o valor do item</label>
+        <div class="control has-icons-left">
+            {{form.price}}
+            <span class="icon is-small is-left"><i class="fas fa-dollar-sign"></i></span>
+        </div>
+    </div>
+    <div class="field">
+        <label for="{{form.category.id_for_label}}" class="label has-text-weight-light">Adicione uma categoria</label>
+        <div class="control">
+            <div class="select is-fullwidth">
+                {{form.category}}
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label for="{{form.offer.id_for_label}}" class="label has-text-weight-light">Adicione uma oferta</label>
+        <div class="control">
+            <div class="select is-fullwidth">
+                {{form.offer}}
+            </div>
+        </div>
+    </div>
+    <div class="level">
+        
+        <div class="level-left">
+            <div class="level-item">
+                <label for="{{form.available.id_for_label}}" class="label has-text-weight-light">Marcar item como disponivel</label>
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item">
+                <label class="toggle">
+                {% render_field form.available class="toggle__input" %}
+                    <span class="toggle__label">
+                      <span class="toggle__text"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="field is-grouped">
+        <div class="control">
+            <button type="reset"  class="button is-medium is-danger">Cancelar</button>
+        </div>
+        <div class="control">
+            <button type="submit" class="button is-medium is-link">Adicionar</button>
+        </div>
+    </div>
+  </form>
+</div>

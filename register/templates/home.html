@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% load load_permissions %}
+
+{% block body %}
+
+  {% include "pusher.html" %}
+
+  {% if request.user|permissions %}
+    {% if request.user.manager %}
+      {% include 'manager_dashboard.html' %}
+    {% else %}
+
+    <p><a href="{% url 'register:home' %}"> Início </a></p>
+    <p><a href="{% url 'register:establishment_list_all' %}"> Estabelecimentos </a></p>
+    <p><a href="{% url 'register:employee_list_all' %}"> Usuários </a></p>
+    <p><a href="{% url 'register:dashboard_all_establishments' %}"> Dashboard </a></p>
+    <p><a href="{% url 'register:configurations' %}"> Configurations </a></p>
+
+    {% endif %}
+  {% endif %}
+
+  {% if request.user.employee %}
+    {% if request.user|permissions:"3" %}
+
+      <p><a href="{% url 'register:orders_list' request.user.employee.establishment.pk %}"> Pedidos </a></p>
+      <p><a href="{% url 'register:bill_list' request.user.employee.establishment.pk %}"> Contas </a></p>
+      <p><a href="{% url 'register:request_list' request.user.employee.establishment.pk %}"> Solicitações de Atendimento </a></p>
+
+      <script>
+        var channel = pusher.subscribe(`waiter-${user_id}`);
+        channel.bind('request_for_waiter', function(data) {
+          alert(JSON.stringify('O Cliente ' + data.username + ' na mesa ' +
+                               data.table_name + ' da Zona ' + data.table_zone_name +
+                               ' está solicitando um atendimento'));
+        });
+
+        channel.bind('payment_verification', function(data) {
+          alert(JSON.stringify('O Cliente ' + data.username + ' realizou um pagamento. ' +
+                               'O status atualmente é: '+ data.status +
+                               ' por favor, confirme ou rejeite.'));
+        });
+        channel.bind('makes_new_order', function(data) {
+          alert(JSON.stringify('Novo Pedido Realizado ' + data.order.id));
+        });
+      </script>
+
+    {% endif %}
+
+    {% if request.user|permissions:"2" %}
+
+      <script>
+        var channel = pusher.subscribe(`kitchen-${user_id}`);
+        channel.bind('makes_new_order', function(data) {
+            alert(JSON.stringify('Novo Pedido Realizado ' + data.order.id));
+        });
+
+        channel.bind('cancels_existing_order', function(data) {
+            alert(JSON.stringify('O pedido de Número: ' + data.order_id + ' Foi cancelado pelo usuário'));
+        });
+      </script>
+
+      <a href="{% url 'register:orders_list' request.user.employee.establishment.pk %}"> Pedidos </a>
+
+    {% endif %}
+
+    {% if request.user|permissions:"4" %}
+
+    <script>
+    var channel = pusher.subscribe(`door_man-${user_id}`);
+    channel.bind('payment_confirm', function(data) {
+        alert(JSON.stringify('O Cliente ' + data.username + ' Da mesa ' + data.table + ' Teve seu pagamento aprovado'));
+    });
+    </script>
+
+    <p><a href="{% url 'register:bill_list' request.user.employee.establishment.pk %}"> Contas </a></p>
+
+    {% endif %}
+  {% endif %}
+
+{% endblock %}

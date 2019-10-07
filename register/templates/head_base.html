@@ -1,0 +1,19 @@
+{% load staticfiles %}
+
+<html class="bg-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noruh {% block title %}{% endblock %}</title>
+    <link href="{% static 'dashboard-ui/noruh-dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard-ui/custom.css' %}" rel="stylesheet">
+    <script src="{% static "js/custom.js" %}"></script>
+    {% block extra-css %}{% endblock %}
+    <script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+</head>

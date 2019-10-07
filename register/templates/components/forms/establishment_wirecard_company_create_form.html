@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load bulma_tags %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section class="bg-white moip-account">
+  <div class="column is-10 is-offset-1">
+    <p class="title is-2 has-text-primary has-text-weight-light">Criar Conta Wirecard - Pessoa Jurídica</p>
+  </div>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="column is-10 is-offset-1 box">
+      <div class="columns is-multiline has-pad-3">
+        <div class="column is-full">
+          <p class="moip-text">Email da Conta</p>
+          {{ form.email|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">Nome do Representante da Empresa</p>
+          {{ form.name_person|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">Numero do CPF do Representante</p>
+          {{ form.number_cpf|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">Data de Nascimento do Representante</p>
+          {{ form.birth_date|bulma }}
+        </div>
+      </div>
+      <div class="columns is-multiline has-pad-3">
+        <div class="column is-third">
+          <p class="moip-text">Nome Fantasia</p>
+          {{ form.name_company|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">Razão Social</p>
+          {{ form.business_name|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">Data de Abertura</p>
+          {{ form.opening_date|bulma }}
+        </div>
+      </div>
+      <div class="columns is-multiline has-pad-3">
+        <div class="column is-third">
+          <p class="moip-text">CNPJ</p>
+          {{ form.number_cnpj|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">CNAE</p>
+          {{ form.cnae|bulma }}
+        </div>
+        <div class="column is-third">
+          <p class="moip-text">Descrição</p>
+          {{ form.description|bulma }}
+        </div>
+      </div>
+      <div class="columns is-multiline has-pad-3">
+        <div class="column is-half">
+          <p class="moip-text"><strong>Telefone da Empresa</strong></p>
+          <p class="moip-text">Código País</p>
+          {{ form.country_code_company|bulma }}
+          <p class="moip-text">Código Área</p>
+          {{ form.area_code_company|bulma }}
+          <p class="moip-text">Telefone</p>
+          {{ form.phone_number_company|bulma }}
+        </div>
+        <div class="column is-half">
+          <p class="moip-text"><strong>Endereço da Empresa</strong></p>
+          <p class="moip-text">Endereço</p>
+          {{ form.street_company|bulma }}
+          <p class="moip-text">Número do Endereço</p>
+          {{ form.street_number_company|bulma }}
+          <p class="moip-text">Bairro</p>
+          {{ form.district_company|bulma }}
+          <p class="moip-text">Cidade</p>
+          {{ form.city_company|bulma }}
+          <p class="moip-text">Estado</p>
+          {{ form.state_company|bulma }}    
+          <p class="moip-text">CEP da Empresa</p>
+          {{ form.zip_code_company|bulma }}
+        </div>
+        <div class="column is-half">
+          <div class="column is-third">
+            <p class="moip-text"><strong>Telefone do Representante</strong></p>
+            <p class="moip-text">Código País</p>
+            {{ form.country_code_personal|bulma }}
+          </div>
+          <div class="column is-third">
+            <p class="moip-text">Código Área</p>
+            {{ form.area_code_personal|bulma }}
+          </div>
+          <div class="column is-third">
+            <p class="moip-text">Telefone</p>
+            {{ form.phone_number_personal|bulma }}
+          </div>
+        </div>
+        <div class="column is-half">
+          <p class="moip-text"><strong>Endereço do Representante</strong></p>
+          <p class="moip-text">Endereço</p>
+          {{ form.street_personal|bulma }}
+          <p class="moip-text">Número do Endereço</p>
+          {{ form.street_number_personal|bulma }}
+          <p class="moip-text">Bairro</p>
+          {{ form.district_personal|bulma }}
+          <p class="moip-text">Cidade</p>
+          {{ form.city_personal|bulma }}
+          <p class="moip-text">Estado</p>
+          {{ form.state_personal|bulma }}
+          <p class="moip-text">CEP</p>
+          {{ form.zip_code_personal|bulma }}
+        </div>
+      </div>  
+      <div class="column is-two-fifths has-margin-auto">
+        <button type="submit" class="button is-primary has-in-center is-complete">Salvar</button>
+      </div>
+    </div>
+  </form>
+</section>
+<script>
+  $(document).ready(function () {
+    $('input#id_number_cnpj').mask('00.000.000/0000-00', { reverse: true });
+    $('input#id_cnae').mask('00.00-0/00', { reverse: true });
+    $('input#id_opening_date').mask('0000-00-00', { reverse: true });
+
+    $('input#id_country_code_company').mask('00', { reverse: true });
+    $('input#id_area_code_company').mask('00', { reverse: true });
+    $('input#id_phone_number_company').mask('90000-0000', { reverse: true });
+
+    $('input#id_country_code_personal').mask('00', { reverse: true });
+    $('input#id_area_code_personal').mask('00', { reverse: true });
+    $('input#id_phone_number_personal').mask('90000-0000', { reverse: true });    
+
+    $('input#id_state_personal').mask('AA', { reverse: true });
+    $('input#id_zip_code_personal').mask('00000000', { reverse: true });    
+
+    $('input#id_state_company').mask('AA', { reverse: true });
+    $('input#id_zip_code_company').mask('00000000', { reverse: true });    
+    
+    $('input#id_birth_date').mask('0000-00-00', { reverse: true });
+    $('input#id_number_cpf').mask('000.000.000-00', { reverse: true });
+  
+    $('input#id_zip_code').mask('00000000');
+    $('input#id_issue_date').mask('0000-00-00');
+
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+{% endblock %}

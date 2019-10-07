@@ -1,0 +1,26 @@
+version: "3.6"
+
+services:
+  database:
+    image: mdillon/postgis
+    ports:
+      - 5432:5432
+    volumes:
+      - noruh_backend_database_vol:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=noruh
+      - POSTGRES_USER=noruh
+      - POSTGRES_PASSWORD=noruh
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 8880:80
+    links:
+      - database
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=dba@noruh.com.br
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+
+volumes:
+  noruh_backend_database_vol:

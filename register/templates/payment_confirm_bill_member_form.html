@@ -1,0 +1,120 @@
+{% load thumbnail %}
+
+<div class="container is-fluid is-clipped">
+    <div class="columns is-centered">
+        <div class="column c">
+            <div class="card">
+                <div class="card-content">
+                    <section>
+                        <div class="columns is-centered">
+                            <div class="column">
+                                <figure class="image is-64x64" style="margin: auto">
+                                    {% if bill_member.customer.profile.image_url %}
+                                    <img src="{% thumbnail bill_member.customer.profile.image_url 60x60 crop %}" alt=""
+                                        class="is-rounded">
+                                    {% else %}
+                                    <img src="https://via.placeholder.com/64" alt="" class="is-rounded">
+                                    {% endif %}
+                                </figure>
+                                <p class="title is-6 has-text-primary has-text-centered">
+                                    {{ bill_member.customer.first_name|default:"Cliente" }}</p>
+                            </div>
+                        </div>
+                    </section>
+                    {% for order in bill_member.order %}
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">{{ order.quantity }}x&nbsp;</p>
+                            <p> {{ order.item.name }} </p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{ order.total_price }} </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="level">
+                        <div class="border-bottom-payment"></div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">Parcial</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$
+                                {{bill_member.value_consumed_without_taxes|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p>10% (opcional)</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{bill_member.calc_service_tax|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">1x&nbsp;</p>
+                            <p>Couvert</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{bill_member.bill.establishment.taxe_couvert}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p>Taxa Noruh (opcional)</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$
+                                {{bill_member.bill.establishment.noruh_fee|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="level">
+                        <div class="border-bottom-payment"></div>
+                    </div>
+
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="has-text-weight-bold">TOTAL&nbsp;</p>
+                        </div>
+                        <div class="level-right">
+                            <p class="has-text-weight-bold"> R$ {{bill_member.value_consumed|floatformat:2}} </p>
+                        </div>
+                    </div>
+
+                    <div class="column is-inline is-marginless is-paddingless">
+                        <section class="is-inline is-marginless is-paddingless">
+                            <p class="is-size-5 has-text-weight-bold">Valor Pago:</p>
+                            <p class="is-size 3">R$ {{ bill_payment.value }}</p>
+                        </section>
+                    </div>
+                    <div class="columns has-padt-3">
+                        <div class="column is-half">
+
+                            <form id="payment_reject_bill_member_form"
+                                action="{% url 'register:bill_payment_reject' bill_payment.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="button is-danger is-fullwidth" type="submit">Recusar</button>
+                            </form>
+                        </div>    
+                        <div class="column ">
+                            <form id="payment_confirm_bill_member_form"
+                            action="{% url 'register:bill_payment_aprove_or_reject' bill_payment.id %}" method="POST">
+                                {% csrf_token %}
+                                <input id="submit" onclick="submitConfirmation()"
+                                    class="button is-primary is-fullwidth" type="submit" value="Aceitar">
+                            </form>                            
+                        </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

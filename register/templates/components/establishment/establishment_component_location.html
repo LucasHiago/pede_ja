@@ -1,0 +1,52 @@
+{% load bulma_tags %}
+{% load bulma_tags leaflet_tags %}
+
+<link rel="stylesheet" href="/static/leaflet/leaflet.css">
+<link rel="stylesheet" href="/static/leaflet/draw/leaflet.draw.css" type="text/css">
+
+<div class="columns is-multiline has-magt-2">
+  <div class="card column is-full has-pad-3">
+    <div class="level is-border-bottom has-padb-2">
+      <div class="level-left">
+        <div class="level-item">
+          <label for="" class="label is-size-5 has-text-weight-normal has-text-primary">Localização</label>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <button id="activate_obs" class="button is-link is-outlined">
+            <a id="card-location" href="{% url 'register:establishment_update_location' establishment.pk %}">Alterar Localização</a>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="map_holder">
+      <div id="map"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/131leaflet.js" type="text/javascript"></script>
+<script src="/static/leaflet/draw/leaflet.draw.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+  var lati = "{{establishment.geo_loc.x}}";
+  var longi = "{{establishment.geo_loc.y}}";
+  var latistr = lati;
+  var reslati = latistr.replace(",", ".");
+  var longistr = longi;
+  var reslongi = longistr.replace(",", ".");
+  var map = L.map('map').setView([reslongi, reslati], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  L.marker([reslongi, reslati]).addTo(map)
+    .bindPopup('{{ establishment.address }}')
+    .openPopup();
+
+  map.options.crs = L.CRS.EPSG4326;
+
+</script>

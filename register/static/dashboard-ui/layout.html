@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noruh Dashboard UI - Layout</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.css">
+<link href="noruh-dashboard.css" rel="stylesheet"></head>
+
+<body class="has-nav-left">
+  <!-- Start nav -->
+  <nav class="nav-left">
+    <div class="nav-left__wrapper">
+      <a class="media nav-left__profile has-text-white">
+        <div class="media-left nav-left__profile__avatar">
+          {% if user.employee %}
+          <img src="{{ user.employee.image|thumbnail_url:'dashboard_user_avatar' }}" />
+          {% else %}
+          <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+          {% endif %}
+        </div>
+        <div class="media-content is-hidden-mobile">
+          <div>Noruh User</div>
+          <div class="has-text-grey-light">User Role</div>
+        </div>
+      </a>
+      <div class="nav-left__pages">
+        <a href="index.html">
+          <i class="fa fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="layout.html" class="actived">
+          <i class="fa fa-th-large"></i>
+          <span>Layout</span>
+        </a>
+        <a href="list.html">
+          <i class="fas fa-list-ul"></i>
+          <span>List and Filter</span>
+        </a>
+        <a href="forms.html">
+          <i class="fab fa-wpforms"></i>
+          <span>Forms</span>
+        </a>
+      </div>
+      <div class="nav-left__action">
+        <a class="button is-highlight is-rounded is-medium is-fullwidth">Sair</a>
+        <a class="icon fa fa-sign-out-alt"></a>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="nav-top">
+    <div class="columns">
+      <div class="column">
+        <div class="control has-icons-left">
+          <span class="icon is-small is-left">
+            <i class="fas fa-search"></i>
+          </span>
+          <input class="input is-transparent" type="text" placeholder="Busque por usuários e estabelecimentos" />
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="dropdown is-right" data-dropdown>
+          <div class="dropdown-trigger">
+            <button class="button icon has-text-grey icon-notification">
+              <span class="icon is-small">
+                <i class="far fa-bell"></i>
+              </span>
+              <span class="icon dot is-small">
+                <i class="fas fa-circle"></i>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-item">
+                <p>Notification 1</p>
+              </div>
+              <hr class="dropdown-divider">
+              <a href="#" class="dropdown-item">Notification Link 2</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- End nav -->
+
+  <section>
+    <h3 class="title is-3">Layout</h3>
+    <div class="columns">
+      <div class="column">
+        <div class="card has-padding">
+          <div class="media align-center">
+            <div class="media-content number-info__content">
+              <div class="has-text-grey">Faturamento Total</div>
+              <h3 class="title is-3">R$100,00</h3>
+              <div class="has-text-danger"><i class="fas fa-arrow-down"></i> 10,5%</div>
+            </div>
+            <div class="media-right">
+              <div class="icon-ellipse has-background-danger has-text-white">
+                <i class="icon fas fa-money-check-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card has-padding">
+          <div class="media align-center">
+            <div class="media-content number-info__content">
+              <div class="has-text-grey">Acessos</div>
+              <h3 class="title is-3">52K</h3>
+              <div class="has-text-success"><i class="fas fa-arrow-up"></i> 21%</div>
+            </div>
+            <div class="media-right">
+              <div class="icon-ellipse has-background-info has-text-white">
+                <i class="icon fas fa-hand-point-up"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card has-padding">
+          <div class="media align-center">
+            <div class="media-content number-info__content">
+              <div class="has-text-grey">Pedidos</div>
+              <h3 class="title is-3">432</h3>
+              <div class="has-text-danger"><i class="fas fa-arrow-down"></i> 5%</div>
+            </div>
+            <div class="media-right">
+              <div class="icon-ellipse has-background-primary has-text-white">
+                <i class="icon fas fa-hand-holding-usd"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-two-thirds">
+        <div class="columns is-column">
+          <div class="column">
+            <div class="card has-padding">
+              <h4 class="title is-4 has-text-weight-normal">Ranking de desempenho</h4>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Estabelecimento</th>
+                    <th>Cidades</th>
+                    <th>Pedidos</th>
+                    <th>Taxa Noruh</th>
+                    <th>Faturamento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="tag is-primary">1º</span> Restaurante Palace Long Fu</td>
+                    <td>Brasília</td>
+                    <td>5454</td>
+                    <td>R$5.632,09</td>
+                    <td>R$70.877,67</td>
+                  </tr>
+                  <tr>
+                    <td><span class="tag is-primary">2º</span> Restaurante Coco Bombu</td>
+                    <td>Maceió</td>
+                    <td>243</td>
+                    <td>R$876,93</td>
+                    <td>R$3.371,78</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card has-padding">
+              <h4 class="title is-4 has-text-weight-normal">Mesas</h4>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Mesas</th>
+                    <th>Zona</th>
+                    <th>Nº de pedidos</th>
+                    <th>Status da mesa</th>
+                    <th>Conta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Mesa 02</td>
+                    <td>01</td>
+                    <td>45</td>
+                    <td><span class="tag is-success">Aberta</span></td>
+                    <td>R$32,09</td>
+                  </tr>
+                  <tr>
+                    <td>Mesa 06</td>
+                    <td>01</td>
+                    <td>2</td>
+                    <td><span class="tag is-danger">Fechada</span></td>
+                    <td>R$2,92</td>
+                  </tr>
+                  <tr>
+                    <td>Mesa 04</td>
+                    <td>02</td>
+                    <td>10</td>
+                    <td><span class="tag is-warning">Aguardando pagamento</span></td>
+                    <td>R$22,92</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card has-padding">
+          <h4 class="title is-4 has-text-weight-normal">Ranking de Cidades</h4>
+          <div class="responsive-map">
+            <div class="responsive-map__content" id="map"></div>
+          </div>
+          <p>&nbsp;</p>
+          <div class="level">
+            <div class="level-left">
+              <span class="icon has-text-coral-pink">
+                <i class="fas fa-dot-circle"></i>
+              </span>
+              Rio de Janeiro
+            </div>
+            <div class="level-right">
+              R$2702,83
+            </div>
+          </div>
+          <div class="level">
+            <div class="level-left">
+              <span class="icon has-text-light-pastel-purple">
+                <i class="fas fa-dot-circle"></i>
+              </span>
+              São Paulo
+            </div>
+            <div class="level-right">
+              R$1502,83
+            </div>
+          </div>
+          <div class="level">
+            <div class="level-left">
+              <span class="icon has-text-maya-blue">
+                <i class="fas fa-dot-circle"></i>
+              </span>
+              Brasília
+            </div>
+            <div class="level-right">
+              R$1302,83
+            </div>
+          </div>
+          <div class="level">
+            <div class="level-left">
+              <span class="icon has-text-medium-aquamarine">
+                <i class="fas fa-dot-circle"></i>
+              </span>
+              Maceió
+            </div>
+            <div class="level-right">
+              R$902,83
+            </div>
+          </div>
+          <div class="level">
+            <div class="level-left">
+              <span class="icon has-text-persian-pink">
+                <i class="fas fa-dot-circle"></i>
+              </span>
+              Santana do Ipanema
+            </div>
+            <div class="level-right">
+              R$2,83
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <div class="card has-padding">
+          <h4 class="title is-4 has-text-weight-normal">Pedido</h4>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>QTD</th>
+                <th>Item</th>
+                <th>N do pedido</th>
+                <th>Mesa</th>
+                <th>Usuário</th>
+                <th>Status</th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01</td>
+                <td>Macarrão com frango</td>
+                <td>45</td>
+                <td>01</td>
+                <td>João das Neves</td>
+                <td><span class="tag is-success">Pronto</span></td>
+                <td><a>Ver detalhes</a></td>
+              </tr>
+              <tr>
+                <td>01</td>
+                <td>Bife ao molho</td>
+                <td>46</td>
+                <td>01</td>
+                <td>Marco Paulo</td>
+                <td><span class="tag is-warning">Preparando</span></td>
+                <td><a>Ver detalhes</a></td>
+              </tr>
+              <tr>
+                <td>02</td>
+                <td>Camaração frito</td>
+                <td>47</td>
+                <td>02</td>
+                <td>Tereza Yara</td>
+                <td><span class="tag is-danger">Cancelado</span></td>
+                <td><a>Ver detalhes</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    window.noruhdashboardready = function () {
+      var mymap = L
+        .map(
+          'map',
+          { zoomControl: false },
+        )
+        .setView(
+          [
+            -14.235,
+            -51.9253,
+          ],
+          3,
+        );
+
+      L.tileLayer(
+        'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+        {
+          minZoom: 3,
+          maxZoom: 3,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        },
+      ).addTo(mymap);
+
+      L.marker(
+        [-9.6498, -35.7089],
+        { icon: colloredMarker('persian-pink') },
+      ).addTo(mymap);
+
+      L.marker(
+        [-8.6498, -36.7089],
+        { icon: colloredMarker('maya-blue') },
+      ).addTo(mymap);
+
+      L.marker(
+        [-15.6498, -40.7089],
+        { icon: colloredMarker('light-pastel-purple') },
+      ).addTo(mymap);
+
+      L.marker(
+        [-10.6498, -48.7089],
+        { icon: colloredMarker('light-salmon') },
+      ).addTo(mymap);
+
+      L.marker(
+        [-20.6498, -46.7089],
+        { icon: colloredMarker('medium-aquamarine') },
+      ).addTo(mymap);
+
+      L.marker(
+        [-26.6498, -50.7089],
+        { icon: colloredMarker('coral-pink') },
+      ).addTo(mymap);
+    };
+  </script>
+<script type="text/javascript" src="noruh-dashboard.js"></script></body>
+
+</html>

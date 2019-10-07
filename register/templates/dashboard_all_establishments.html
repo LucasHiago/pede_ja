@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra-css %}
+<style>
+    .ranking {
+        max-height: 50%;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container is-fluid">
+    <div class="level">
+        <div class="level-left">
+            <h1 class="is-size-3 has-text-primary">Dashboard</h1>
+        </div>
+        <div class="level-right">
+            <form id="month-filter-form" action="{% url 'register:dashboard_all_establishments' %}" method="get"
+                accept-charset="utf-8">
+                <label class="subtitle is-7">Filtrar por mês:</label>
+                <div class="select is-small">
+                    <select name="month-filter">
+                        <option value="1">Janeiro</option>
+                        <option value="2">Fevereiro</option>
+                        <option value="3">Março</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Maio</option>
+                        <option value="6">Junho</option>
+                        <option value="7">Julho</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="columns is-centered display-flex-not-tablet">
+        <div class="column is-full-tablet is-one-fifth-desktop">
+            <div class="card">
+                <div class="card-content is-height-110">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i
+                                    class="fas fa-2x fa-credit-card noruh_total_faturamento"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">R$ {{ all_billing|default_if_none:"0"|intcomma}}</p>
+                            <p class="subtitle is-6 faturamento-mes">Faturamento Total:
+                                <strong>{{filter_date|date:'F'}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-full-tablet is-one-fifth-desktop">
+            <div class="card">
+                <div class="card-content is-height-110">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i
+                                    class="fas fa-2x fa-money-bill noruh_total_contas"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">{{ all_bills }}</p>
+                            <p class="subtitle is-6 pedido-mes">Total de contas:
+                                <strong>{{filter_date|date:'F'}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-full-tablet is-one-fifth-desktop">
+            <div class="card">
+                <div class="card-content is-height-110">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i class="fas fa-2x fa-utensils noruh_total_pedidos"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">{{ all_orders|default_if_none:"0" }}</p>
+                            <p class="subtitle is-6 acesso-mes">Total de Pedidos:
+                                <strong>{{filter_date|date:'F'}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-full-tablet is-one-fifth-desktop">
+            <div class="card">
+                <div class="card-content is-height-110">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i
+                                    class="fas fa-2x fa-money-bill noruh_compensation_offline"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">R$ {{ all_compensations|default_if_none:"0"|intcomma}}</p>
+                            <p class="subtitle is-6 faturamento-mes">Total Repasse Offline:
+                                <strong>{{filter_date|date:'F'}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-full-tablet is-one-fifth-desktop">
+            <div class="card">
+                <div class="card-content is-height-110">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="icon is-large"><i class="fas fa-2x fa-users users-total"></i></span>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">{{count_customers}}</p>
+                            <p class="subtitle is-6 acesso-mes">Total de Clientes</p>
+                        </div>
+                        <ul class="users-gender">
+                            <li class="users-vertical">
+                                <p class="subtitle-users">{{customers_male}}</p>
+                                <p class="description-users">Masculino</p>
+                            </li>
+                            <li class="users-vertical">
+                                <p class="subtitle-users">{{customers_female}}</p>
+                                <p class="description-users">Feminino</p>
+                            </li>
+                            <li class="users-vertical">
+                                <p class="subtitle-users">{{customers_other}}</p>
+                                <p class="description-users">Outro</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns is-centered">
+        <div class="column is-full">
+            <div class="card">
+                <div class="card-content">
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="subtitle is-6 has-text-primary"> {{variable_name_filter}} </p>
+                        </div>
+                        <div class="level-right">
+                            <form id="type_filter_form" action="{% url 'register:dashboard_all_establishments' %}"
+                                method="get" accept-charset="utf-8">
+                                <label class="subtitle is-7">Filtrar por:</label>
+                                <div class="select is-small">
+                                    <select name="type_filter" id="filter_by_chart">
+                                        <option value selected="all_billing">Faturamento Total</option>
+                                        <option value="all_bills">Total de Contas</option>
+                                        <option value="all_orders">Total de Pedidos</option>
+                                        <option value="payment_online">Pagamento Online</option>
+                                        <option value="payment_offline">Pagamento Offline</option>
+                                        <option value="moip_taxe">Taxa Moip</option>
+                                        <option value="evaluation_average">Média de Avaliações</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="position: relative; height:25em; width:auto">
+                        <canvas id="faturamento-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns is-centered">
+        <div class="column is-full">
+            <div class="card">
+                <div class="card-content">
+                    <p class="subtitle is-6 has-text-primary"> Ranking de Desempenho </p>
+                    <table id="ranking" class="table is-hoverable is-fullwidth is-size-7 ranking">
+                        <thead>
+                            <th class="has-text-weight-bold">
+                                Estabelecimentos
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Ticket Médio
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Taxa Noruh
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Total de Contas
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Total de Pedidos
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Pagamentos Online
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Pagamento Offline
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Media das avaliações
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Taxa Moip
+                            </th>
+                            <th class="has-text-weight-bold">
+                                Faturamento Total
+                            </th>
+                        </thead>
+                        <tbody>
+                            {% for establishment in all_establishments %}
+                            <tr>
+                                <td> {{ establishment.name }} </td>
+                                <td class="Money"> {{ establishment.average_bills|floatformat:2 }} </td>
+                                <td class="Money"> {{ establishment.noruh_tax_to_super_admin }} </td>
+                                <td> {{ establishment.all_bills }} </td>
+                                <td> {{ establishment.all_orders }} </td>
+                                <td class="Money"> {{ establishment.payment_online }} </td>
+                                <td class="Money"> {{ establishment.payment_offline }}</td>
+                                <td> {{ establishment.evaluation_average|floatformat:2 }} </td>
+                                <td class="Money"> {{ establishment.moip_taxe }} </td>
+                                <td class="Money"> {{ establishment.all_billing }} </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% endblock %}
+
+        {% block extra-js %}
+        <script>
+
+            /* Filtering the data from dashboard by month */
+            // Filtering by type
+
+            $.urlParam = function (name) {
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results == null) {
+                    return null;
+                }
+                return decodeURI(results[1]) || 0;
+            }
+
+
+            $('select[name=type_filter]').val($.urlParam('type_filter'));
+
+            $('form#type_filter_form').submit(function (event) {
+                event.preventDefault();
+
+                console.log()
+
+                var path = window.location.pathname;
+
+                var search = window.location.search;
+
+                var query = $('select[name=type_filter]').val();
+
+                if (search.includes("month-filter")) {
+                    if (search.includes("type_filter")) {
+                        search = location.search.split("&");
+                        location.replace(path.concat(search[0] + "&type_filter=" + query));
+                    } else {
+                        location.replace(path.concat(search + "&type_filter=" + query));
+                    }
+                } else {
+                    location.replace(path.concat("?type_filter=" + query));
+                }
+            });
+
+            $('select[name=type_filter]').change(function () {
+                $('form#type_filter_form').submit();
+            });
+
+            // Filtering by month
+
+            $('select[name=month-filter]').val("{{ month_name }}");
+
+            $('select[name=month-filter]').change(function () {
+                $('form#month-filter-form').submit();
+            });
+
+            $(function () {
+                $('#ranking').tablesorter({
+                    theme: 'bootstrap',
+                    headerTemplate: '{content} {icon}',
+                    sortList: [[0, 0], [1, 0], [2, 0]],
+                    widgets: ['zebra', 'columns', 'uitheme',]
+                });
+
+            });
+
+            var ctx = document.getElementById("faturamento-chart").getContext('2d');
+
+            var months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+            var data = [];
+            var labels = [];
+            var labelValue = 'R$';
+
+            if (document.getElementById('filter_by_chart').value == "all_billing") {
+                labelValue = 'R$';
+            }
+            if (document.getElementById('filter_by_chart').value == "all_bills") {
+                labelValue = 'Unidades';
+            }
+            if (document.getElementById('filter_by_chart').value == "all_orders") {
+                labelValue = 'Unidades';
+            }
+            if (document.getElementById('filter_by_chart').value == "payment_online") {
+                labelValue = 'R$';
+            }
+            if (document.getElementById('filter_by_chart').value == "payment_offline") {
+                labelValue = 'R$';
+            }
+            if (document.getElementById('filter_by_chart').value == "moip_taxe") {
+                labelValue = 'R$';
+            }
+            if (document.getElementById('filter_by_chart').value == "evaluation_average") {
+                labelValue = 'Pontos';
+            }
+
+
+
+            {% for revenue in revenues %}
+            var MonthTrated = {{ revenue.month }};
+            var ValueTrate = "{{ revenue.value }}";
+            var ValueTrated = ValueTrate.replace(',', '.');
+            labels.push(months[MonthTrated - 1]);
+            data.push(ValueTrated);
+            {% endfor %}
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelValue,
+                        data: data,
+                        backgroundColor: 'rgba(86, 77, 221, 0.2)',
+                        borderColor: 'rgba(86, 77, 221, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: {
+                            tension: 0, // disables bezier curves
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+        </script>
+        {% endblock %}

@@ -1,0 +1,17 @@
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="tabs">
+            <ul>
+                <li {% if request.resolver_match.url_name == "establishment_dashboard" %} class="is-active" {% endif %}><a href="{% url 'register:establishment_dashboard' establishment.pk %}">Estatísticas</a></li>
+                <li {% if request.resolver_match.url_name == "orders_list" %} class="is-active" {% endif %}><a href="{% url 'register:orders_list' establishment.pk %}">Pedidos</a></li>
+                <li {% if request.resolver_match.url_name == "bill_list" %} class="is-active" {% endif %}><a href="{% url 'register:bill_list' establishment.pk %}">Contas</a></li>
+                <li {% if request.resolver_match.url_name == "table_zone_list" %} class="is-active" {% endif %}><a href="{% url 'register:table_zone_list' establishment.pk %}">Mesas</a></li>
+                <li {% if request.resolver_match.url_name == "menu_item_list" %} class="is-active" {% endif %}><a href="{% url 'register:menu_item_list' establishment.pk %}">Cardápio</a></li>
+                <li {% if request.resolver_match.url_name == "menu_offer_list" %} class="is-active" {% endif %}><a href="{% url 'register:menu_offer_list' establishment.pk %}">Ofertas</a></li>
+                <li {% if request.resolver_match.url_name == "evaluation_list" %} class="is-active" {% endif %}><a href="{% url 'register:evaluation_list' establishment.pk %}">Avaliações</a></li>
+                <li {% if request.resolver_match.url_name == "employee_list_establishment" %} class="is-active" {% endif %}><a href="{% url 'register:employee_list_establishment' establishment.pk %}">Usuários</a></li>
+                <li {% if request.resolver_match.url_name == "establishment_configurations" %} class="is-active" {% endif %}><a href="{% url 'register:establishment_configurations' establishment.pk %}">Configurações</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

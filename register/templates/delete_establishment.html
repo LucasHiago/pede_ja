@@ -1,0 +1,57 @@
+{% block body %}
+
+<section class="box">
+    <form method="POST" action="{% url 'register:establishment_delete' establishment.id %}">
+        {% csrf_token %}
+        <h1 class="title is-4 has-text-primary has-text-weight-light has-text-centered">Excluir Estabelecimento</h1>
+        <div class="control has-padt-4 has-padb-4">
+            <input id="confirm_delete" type="text" name="name" class="input" placeholder="Ex: Estabelecimento1"
+                maxlength="64" required="" id="id_name" autocomplete="off">
+            <h3 class="title is-6 has-text-weight-light has-text-centered has-text-danger has-alert-text has-width-530">Escreva o nome
+                para confirmar a exclusão do
+                estabelecimento: <strong class="has-text-weight-bold">{{ establishment.name }}</strong></h3>
+        </div>
+        <div class="field is-grouped">
+            <div id="control-1" class="control is-complete has-padt-4">
+                <button id="btn-reset" type="reset"
+                    class="button is-medium is-danger is-complete is-active">Cancelar</button>
+            </div>
+            <div id="control-2" class="control is-inactive has-padt-4">
+                <button id="btn-submit" type="submit" class="button is-medium is-link is-inactive">Remover</button>
+            </div>
+        </div>
+    </form>
+</section>
+
+<script>
+    var btn_delete = $('input#confirm_delete');
+    var establishment_name = "{{ establishment.name }}";
+    $(document).ready(function () {
+        btn_delete.on("input", function (e) {
+            var input = $(this);
+            var val = input.val();
+            if (input.data("lastval") != val) {
+                input.data("lastval", val);
+                //console.log(val);
+                if (val === establishment_name) {
+                    //console.log('name is named');
+                    $('div#control-1').removeClass("is-complete");
+                    $('button#btn-reset').removeClass("is-complete is-active");
+                    $('div#control-2').removeClass("is-inactive");
+                    $('button#btn-submit').removeClass("is-inactive");
+                    $('button#btn-submit').addClass("is-active");
+                } else {
+                    $('div#control-1').addClass("is-complete");
+                    $('button#btn-reset').addClass("is-complete is-active");
+                    $('div#control-2').addClass("is-inactive");
+                    $('button#btn-submit').addClass("is-inactive");
+                    $('button#btn-submit').removeClass("is-active");
+                }
+            }
+        });
+    });
+
+</script>
+
+
+{% endblock %}

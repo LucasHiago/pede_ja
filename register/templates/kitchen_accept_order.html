@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load bulma_tags %}
+
+{% block extra_date %}
+    {{ form.media }}
+{% endblock %}
+
+
+{% block body %}
+
+  <h1> Atualizar Status do Pedido </h1>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form|bulma }}
+
+    <button type="submit" class="button is-primary has-magt-2 is-complete">Save</button>
+
+  </form>
+
+{% endblock %}

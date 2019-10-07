@@ -1,0 +1,37 @@
+{% extends 'components/establishment/establishment_component_base_nobtn.html' %}
+
+{% block title %}QR Codes{% endblock %}
+
+{% block content %}
+
+<label for="" class="label subtitle is-5 has-text-weight-normal">Informações</label>
+<div class="level is-border-bottom has-padb-3">
+  <div class="level-right">
+    <h1 class="subtitle is-6 has-text-weight-normal">Ao escanear este código o usuário será levado à pagina do seu
+      estabelecimento no app Noruh
+    </h1>
+  </div>
+  <div class="level-left">
+    <a href="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=open_establishment:{{establishment.id}}">
+      <img src="/static/images/ic_qrcode.png"/>
+    </a>
+  </div>
+</div>
+
+
+<label for="" class="label subtitle is-5 has-text-weight-normal">Saída</label>
+<div class="level">
+  <div class="level-rigth">
+    <h1 class="subtitle is-6 has-text-weight-normal">Ao escanear este código, o usuário será levado à uma página no app
+      Noruh contendo informações
+      de pagamento da conta
+    </h1>
+  </div>
+  <div class="level-left">
+    <a href="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=show_exit:{{establishment.id}}">
+      <img src="/static/images/ic_qrcode.png"/>
+    </a>
+  </div>
+</div>
+
+{% endblock content %}

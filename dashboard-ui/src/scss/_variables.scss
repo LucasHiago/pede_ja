@@ -1,0 +1,42 @@
+$primary: #564ddd;
+$dark: #43425d;
+
+$family-sans-serif: 'Source Sans Pro', sans-serif;
+
+$input-shadow: none;
+$input-focus-box-shadow-size: 0;
+$input-radius: 0;
+$input-focus-border-color: $dark;
+
+$control-radius: 4px;
+
+$input-arrow: #7a7a7a;
+
+$table-head-background-color: #f5f6fa;
+$table-head-cell-border-width: 0;
+
+$nav-left-background-color: #474a53;
+$nav-left-highlight: #393c45;
+$nav-left-width: 16rem;
+$nav-left-collapsed-width: 4rem;
+$nav-left-padding: 1rem;
+
+$nav-top-padding: .75rem;
+$nav-top-margin-bottom: 1rem;
+
+$coral-pink: #ff8474;
+$light-pastel-purple: #a3a1fb;
+$light-salmon: #ffa177;
+$maya-blue: #54d8ff;
+$medium-aquamarine: #5ee2a0;
+$persian-pink: #ff7cc3;
+
+$noruh-custom-colors: (
+  ('coral-pink', $coral-pink),
+  ('light-pastel-purple', $light-pastel-purple),
+  ('maya-blue', $maya-blue),
+  ('medium-aquamarine', $medium-aquamarine),
+  ('persian-pink', $persian-pink),
+);
+
+$link: $primary;

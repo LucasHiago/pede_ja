@@ -1,0 +1,90 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700');
+
+@import './variables';
+
+@import "~bulma/sass/utilities/_all";
+@import "~bulma/sass/base/_all";
+@import "~bulma/sass/elements/_all";
+@import "~bulma/sass/components/_all";
+@import "~bulma/sass/grid/_all";
+@import "~bulma/sass/layout/_all";
+
+@import './nav-left.scss';
+@import './nav-top.scss';
+@import './icon-notification.scss';
+@import './icon-ellipse.scss';
+@import './number-info.scss';
+@import './responsive-map.scss';
+@import './map-marker.scss';
+@import './colors.scss';
+@import './restaurant-card.scss';
+@import './items-ranking.scss';
+@import './table-card.scss';
+@import './page-login.scss';
+
+
+html {
+  background-color: #f5f7ff;
+  overflow: auto;
+  height: 100%;
+}
+
+
+// Button Icon
+
+.button.icon {
+  border: none;
+}
+
+
+// Input
+
+.input {
+  border-width: 0 0 2px 0;
+  border-radius: $input-radius;
+
+  &.is-transparent {
+    border-color: transparent;
+  }
+}
+
+
+// Sections
+
+section {
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+
+// Card has padding
+
+.card.has-padding {
+  padding: 1rem;
+}
+
+
+// Align center
+
+.align-center {
+  align-items: center;
+}
+
+// Title has half margin
+
+.title {
+  &.has-half-margin {
+    &:not(:last-child) {
+      margin-bottom: .75em;
+    }
+  }
+}
+
+// Force colum in columns
+
+.columns {
+  &.is-column {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,129 @@
+{% load staticfiles load_permissions thumbnail %}
+<nav id="collpase-nave" class="nav-left">
+    <div class="nav-left__wrapper">
+        <a href="{% url 'register:user_logged_detail' %}" class="media nav-left__profile has-text-white">
+            <div class="media-left nav-left__profile__avatar">
+                    {% if user.employee %}
+                      {% if user.employee.image %}
+                      <img src="{{ user.employee.image|thumbnail_url:'dashboard_user_avatar' }}" />
+                      {% else %}
+                      <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+                      {% endif %}
+                    {% else %}
+                    <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+                    {% endif %}
+            </div>
+            <div class="media-content is-hidden-mobile">
+                <div>{{ user.get_full_name|default:user.username }}</div>
+                <div class="has-text-grey-light">{{ user.email }}</div>
+            </div>
+        </a>
+        <div class="nav-left__pages">
+            {% if request.user.is_superuser %}
+            <a class="{% if request.resolver_match.url_name == 'register:dashboard_all_establishments' %}actived{% endif %}"
+                href="{% url 'register:dashboard_all_establishments' %}">
+                <i class="fa fa-home"></i><span>Dashboard</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'establishment_list_all' %}actived{% endif %}"
+                href="{% url 'register:establishment_list_all' %}">
+                <i class="fas fa-utensils"></i>
+                <span>Estabelecimentos</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'employee_list_all' %}actived{% endif %}"
+                href="{% url 'register:employee_list_all' %}">
+                <i class="fas fa-users"></i>
+                <span>Usuários</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'offline_compensations' %}actived{% endif %}"
+                href="{% url 'register:offline_compensations' %}">
+                <i class="fa fa-clipboard"></i>
+                <span>Repasse Offline</span>
+            </a>
+            {% elif request.user.manager %}
+            <a class="{% if request.resolver_match.url_name == 'establishment_dashboard' %}actived{% endif %}"
+                href="{% url 'register:establishment_dashboard' request.user.manager.establishment.pk %}">
+                <i class="fa fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'orders_list' %}actived{% endif %}"
+                href="{% url 'register:orders_list' request.user.manager.establishment.pk %}">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Pedidos</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'table_zone_list' %}actived{% endif %}"
+                href="{% url 'register:table_zone_list' request.user.manager.establishment.pk %}">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Mesas</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'bill_list' %}actived{% endif %}"
+                href="{% url 'register:bill_list' request.user.manager.establishment.pk %}">
+                <i class="fas fa-check-double"></i>
+                <span>Contas</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'orders_list_kitchen_pending' %}actived{% endif %}"
+                href="{% url 'register:orders_list_kitchen_pending' request.user.employee.establishment.pk %}">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Cozinha</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'menu_item_list' %}actived{% endif %}"
+                href="{% url 'register:menu_item_list' request.user.manager.establishment.pk %}">
+                <i class="fas fa-clipboard"></i>
+                <span>Cardápio</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'employee_list_establishment' %}actived{% endif %}"
+                href="{% url 'register:employee_list_establishment' request.user.manager.establishment.pk %}">
+                <i class="fas fa-users"></i>
+                <span>Usuários</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'menu_offer_list' %}actived{% endif %}"
+                href="{% url 'register:menu_offer_list' request.user.manager.establishment.pk %}">
+                <i class="fas fa-tags"></i>
+                <span>Ofertas</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'evaluation_list' %}actived{% endif %}"
+                href="{% url 'register:evaluation_list' request.user.manager.establishment.pk %}">
+                <i class="fas fa-star"></i>
+                <span>Avaliações</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'establishment_configurations' %}actived{% endif %}"
+                href="{% url 'register:establishment_configurations' request.user.manager.establishment.pk %}">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+            {% elif request.user|permissions:"3" %}
+            <a class="{% if request.resolver_match.url_name == 'orders_list' %}actived{% endif %}"
+                href="{% url 'register:orders_list' request.user.employee.establishment.pk %}">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Pedidos</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'orders_list_kitchen_pending' %}actived{% endif %}"
+                href="{% url 'register:orders_list_kitchen_pending' request.user.employee.establishment.pk %}">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Cozinha</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'bill_list' %}actived{% endif %}"
+                href="{% url 'register:bill_list' request.user.employee.establishment.pk %}">
+                <i class="fas fa-check-double"></i>
+                <span>Contas</span>
+            </a>
+            <a class="{% if request.resolver_match.url_name == 'request_list' %}actived{% endif %}"
+                href="{% url 'register:request_list' request.user.employee.establishment.pk %}">
+                <i class="fas fa-circle"></i>
+                <span>Solicitações</span>
+            </a>
+            {% elif request.user|permissions:"2" %}
+            <a class="{% if request.resolver_match.url_name == 'orders_list_kitchen_pending' %}actived{% endif %}"
+                href="{% url 'register:orders_list_kitchen_pending' request.user.employee.establishment.pk %}">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Pedidos</span>
+            </a>
+            {% endif %}
+        </div>
+        <div class="nav-left__action">
+            <a href="{% url 'logout' %}" class="button is-highlight is-rounded is-medium is-fullwidth"><span>Sair</span><i id="collapsed-icon" class="fas fa-sign-out-alt is-inactive"></i></a>
+            <a href="{% url 'logout' %}" class="icon fa fa-sign-out-alt"></a>
+        </div>
+    </div>
+</nav>
+
+<script src="{% static "js/custom.js" %}"></script>

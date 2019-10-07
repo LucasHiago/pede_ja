@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section class="box" id="establishment_delet">
+        <form action="{% url 'register:promocode_delete' promocode.id %}" method="POST">
+                {% csrf_token %}
+                <h3>Você tem certeza que deseja remover?</h3>
+                <button type="submit" class="button is-primary has-magt-2 is-complete">Sim</button>
+        </form>
+</section>
+{% endblock %}

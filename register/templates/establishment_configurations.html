@@ -1,0 +1,67 @@
+{% extends 'establishment_base.html' %}
+
+{% block title %}Configurações{% endblock %}
+
+{% block content %}
+
+
+<div class="columns">
+  <div class="column is-10 is-offset-1">
+    <!-- ESTABLISHMENT DESCRIPTION -->
+    {% include './components/establishment/establishment_component_description.html'  %}
+    <!-- END ESTABLISHMENT DESCRIPTION -->
+
+    <!-- ESTABLISHMENT PHOTOS -->
+    {% include './components/establishment/establishment_component_photos.html'  %}
+    <!-- END ESTABLISHMENT PHOTOS -->
+
+    <!-- ESTABLISHMENT AMENITIES -->
+    {% include './components/establishment/establishment_component_amenities.html'  %}
+    <!-- END ESTABLISHMENT AMENITIES -->
+
+    <!-- ESTABLISHMENT SCHEDULES -->
+    {% include './components/establishment/establishment_component_schedules.html'  %}
+    <!-- END ESTABLISHMENT SCHEDULES -->
+
+    <!-- ESTABLISHMENT PROMOCODE -->
+    {% include './components/establishment/establishment_component_promocode.html'  %}
+    <!-- END ESTABLISHMENT PROMOCODE -->
+
+    <!-- ESTABLISHMENT EVENTS -->
+    {% include './components/establishment/establishment_component_events.html'  %}
+    <!-- END ESTABLISHMENT EVENTS -->
+
+    <!-- ESTABLISHMENT RATES -->
+    {% include './components/establishment/establishment_component_rates.html'  %}
+    <!-- END ESTABLISHMENT RATES -->
+
+    <!-- ESTABLISHMENT ACC MOIP -->
+    {% include './components/establishment/establishment_component_accmoip.html'  %}
+    <!-- END ESTABLISHMENT ACC MOIP -->
+
+    <!-- ESTABLISHMENT LOCATION -->
+    {% include './components/establishment/establishment_component_location.html'  %}
+    <!-- END ESTABLISHMENT LOCATION -->
+
+    <!-- IF SUPER - ESTABLISHMENT EXTRA SETTINGS -->
+    {% if user.is_superuser %}
+    {% include './components/establishment/establishment_component_extra_settings.html'  %}
+    {% endif %}
+    <!-- END IF SUPER ESTABLISHMENT EXTRA SETTINGS -->
+
+    <!-- ESTABLISHMENT QRCODES -->
+    {% include './components/establishment/establishment_component_qrcode.html'  %}
+    <!-- END ESTABLISHMENT QRCODES -->
+
+    <div class="level">
+      <div class="level-left"></div>
+      <div class="level-right">
+        <a id="delete-establihsment-confirm"
+          onclick="deleteAction('{% url 'register:establishment_delete' establishment.id %}', '{{ csrf_token }}')"
+          class="button is-medium is-danger"> Apagar Estabelecimento </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

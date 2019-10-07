@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block nav-top %}{% endblock %}
+
+{% block body %}
+<section>
+  <h1 class="title is-1">List</h1>
+  {% for item in all_items %}
+  {{ item.name }}
+  {% endfor %}
+</section>
+{% endblock %}

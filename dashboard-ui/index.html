@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noruh Dashboard UI</title>
+</head>
+
+<body class="has-nav-left">
+  <!-- Start nav -->
+  <nav class="nav-left">
+    <div class="nav-left__wrapper">
+      <a class="media nav-left__profile has-text-white">
+        <div class="media-left nav-left__profile__avatar">
+          {% if user.employee %}
+          <img src="{{ user.employee.image|thumbnail_url:'dashboard_user_avatar' }}" />
+          {% else %}
+          <img src="{% static 'dashboard-ui/imgs/no-avatar.jpg' %}" />
+          {% endif %}
+        </div>
+        <div class="media-content is-hidden-mobile">
+          <div>Noruh User</div>
+          <div class="has-text-grey-light">User Role</div>
+        </div>
+      </a>
+      <div class="nav-left__pages">
+        <a href="index.html" class="actived">
+          <i class="fa fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="layout.html">
+          <i class="fa fa-th-large"></i>
+          <span>Layout</span>
+        </a>
+        <a href="list.html">
+          <i class="fas fa-list-ul"></i>
+          <span>List and Filter</span>
+        </a>
+        <a href="forms.html">
+          <i class="fab fa-wpforms"></i>
+          <span>Forms</span>
+        </a>
+      </div>
+      <div class="nav-left__action">
+        <a class="button is-highlight is-rounded is-medium is-fullwidth">Sair</a>
+        <a class="icon fa fa-sign-out-alt"></a>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="nav-top">
+    <div class="columns">
+      <div class="column">
+        <div class="control has-icons-left">
+          <span class="icon is-small is-left">
+            <i class="fas fa-search"></i>
+          </span>
+          <input class="input is-transparent" type="text" placeholder="Busque por usuários e estabelecimentos" />
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="dropdown is-right" data-dropdown>
+          <div class="dropdown-trigger">
+            <button class="button icon has-text-grey icon-notification">
+              <span class="icon is-small">
+                <i class="far fa-bell"></i>
+              </span>
+              <span class="icon dot is-small">
+                <i class="fas fa-circle"></i>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-item">
+                <p>Notification 1</p>
+              </div>
+              <hr class="dropdown-divider">
+              <a href="#" class="dropdown-item">Notification Link 2</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- End nav -->
+
+  <section class="hero">
+    <div class="hero-body">
+      <h1 class="title">
+        Noruh Dashboard UI
+      </h1>
+      <h2 class="subtitle">
+        All the Noruh Dashboard's components here.
+      </h2>
+      <p><a href="layout.html">Layout</a></p>
+    </div>
+  </section>
+
+  <section id="buttons">
+    <h1 class="title is-1">Buttons <a href="#buttons">[L]</a></h1>
+
+    <h2 class="title is-2">Colors</h2>
+    <div>
+      <a class="button is-primary">Primary</a>
+      <a class="button is-dark">Dark</a>
+      <a class="button is-link">Link</a>
+      <a class="button is-info">Info</a>
+      <a class="button is-success">Success</a>
+      <a class="button is-warning">Warning</a>
+      <a class="button is-danger">Danger</a>
+      <a class="button is-white">White</a>
+      <a class="button is-light">Light</a>
+      <a class="button is-black">Black</a>
+      <a class="button is-text">Text</a>
+    </div>
+
+    <h2 class="title is-2">Sizes</h2>
+    <div>
+      <a class="button is-small">Small</a>
+      <a class="button">Normal</a>
+      <a class="button is-medium">Medium</a>
+      <a class="button is-large">Large</a>
+    </div>
+
+    <h2 class="title is-2">Outlined</h2>
+    <div>
+      <a class="button is-outlined">Outlined</a>
+      <a class="button is-primary is-outlined">Outlined</a>
+      <a class="button is-dark is-outlined">Outlined</a>
+      <a class="button is-link is-outlined">Outlined</a>
+      <a class="button is-info is-outlined">Outlined</a>
+      <a class="button is-success is-outlined">Outlined</a>
+      <a class="button is-danger is-outlined">Outlined</a>
+    </div>
+  </section>
+
+  <section id="icons">
+    <h1 class="title is-1">Icons <a href="#icons">[L]</a></h1>
+
+    <h2 class="title is-2">Examples</h2>
+    <div>
+      <span class="icon">
+        <i class="fas fa-pen"></i>
+      </span>
+      <span class="icon">
+        <i class="fas fa-times"></i>
+      </span>
+    </div>
+
+    <h2 class="title is-2">Button Icon</h2>
+    <div>
+      <a class="button icon">
+        <i class="fas fa-times"></i>
+      </a>
+    </div>
+  </section>
+
+  <section id="inputs">
+    <h1 class="title is-1">Inputs <a href="#inputs">[L]</a></h1>
+
+    <h2 class="title is-2">Text</h2>
+    <div>
+      <input class="input" type="text" placeholder="Text input">
+    </div>
+
+    <h2 class="title is-2">Password</h2>
+    <div>
+      <input class="input" type="password" placeholder="Password input">
+    </div>
+  </section>
+
+  <section id="tables">
+    <h1 class="title is-1">Tables <a href="#tables">[L]</a></h1>
+    <div>
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Estabelecimento</th>
+            <th>Cidades</th>
+            <th>Pedidos</th>
+            <th>Taxa Noruh</th>
+            <th>Faturamento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag is-primary">1º</span> Restaurante Palace Long Fu</td>
+            <td>Brasília</td>
+            <td>5454</td>
+            <td>R$5.632,09</td>
+            <td>R$70.877,67</td>
+          </tr>
+          <tr>
+            <td><span class="tag is-primary">2º</span> Restaurante Coco Bombu</td>
+            <td>Brasília</td>
+            <td>243</td>
+            <td>R$876,93</td>
+            <td>R$3.371,78</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="pagination">
+    <h1 class="title is-1">Pagination <a href="#pagination">[L]</a></h1>
+    <div>
+      <nav class="pagination">
+        <a class="pagination-previous">Previous</a>
+        <a class="pagination-next">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a class="pagination-link" aria-label="Goto page 1">1</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 45">45</a>
+          </li>
+          <li>
+            <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 47">47</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 86">86</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <section id="modals">
+    <h1 class="title is-1">Modals <a href="#modals">[L]</a></h1>
+    <div>
+      <button data-modal-trigger="#modal" class="button is-primary">Open Modal</button>
+    </div>
+    <div id="modal" class="modal">
+      <div data-modal-close class="modal-background"></div>
+      <div class="card has-padding">
+        <p>Modal Open, close in background or times icon to close.</p>
+      </div>
+      <button class="modal-close is-large" data-modal-close></button>
+    </div>
+  </section>
+
+  <section id="cards">
+    <h1 class="title is-1">Cards <a href="#cards">[L]</a></h1>
+    <div>
+      <div class="card has-padding">
+        <p>This is a card! ;)</p>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>

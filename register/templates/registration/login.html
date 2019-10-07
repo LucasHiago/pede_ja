@@ -1,0 +1,54 @@
+{% load staticfiles bulma_tags %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noruh - Login</title>
+  <link href="{% static 'dashboard-ui/noruh-dashboard.css' %}" rel="stylesheet">
+</head>
+
+<body class="page-login">
+  <div class="page-login__background">
+  </div>
+  <div class="page-login__content">
+    <img src="{% static 'dashboard-ui/imgs/marca_noruh-3x.png' %}" alt="Noruh Logo" height="128" width="128">
+    <p>Peça rápido</p>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="field">
+          {{ form.username.errors }}
+          <label class="label" for="{{ form.username.id_for_label }}">Email</label>
+          <div class="control">
+            <input type="text" name="username" autofocus="" class="input" required="" id="id_username">
+          </div>
+      </div>
+      <div class="field">
+          {{ form.password.errors }}
+          <label class="label" for="{{ form.password.id_for_label }}">Senha</label>
+          <div class="control">
+            <input type="password" name="password" class="input" required="" id="id_password">
+          </div>
+      </div>
+      <div class="columns">
+        <div class="column is-half">
+        <label class="checkbox">
+            <input type="checkbox" name="remember_me"/> Lembrar</label>
+        </div>
+      </div>
+      <div class="field columns">
+        <div class="column is-half">
+          <button type="submit" class="button is-fullwidth is-medium is-primary">Entrar</button>
+        </div>
+        <div class="column is-half">
+          <a href="{% url 'password_reset' %}?next={{request.path}}" class="button is-fullwidth is-medium">Esqueci a senha</a>
+        </div>
+      </div>
+    </form>
+    <p> Ao entrar você está de acordo com nossa <a href="{% url 'register:terms_and_conditions' %}"><b>política de privacidade</b></a>.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{% for user in users %}
+  {% if user.first_name and user.last_name %}
+    <option value="{{user.id}}">{{user.first_name}} {{user.last_name}}</option>
+  {% else %}
+    <option value="{{user.id}}">{{user.email}}</option>
+  {% endif %}
+{% endfor %}

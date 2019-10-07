@@ -1,0 +1,176 @@
+{% extends 'establishment_base.html' %}
+{% load load_permissions %}
+
+{% block content %}
+<section>
+  <div class="columns">
+    <div class="column is-10 is-offset-1">
+      <div class="columns is-multiline">
+        <div class="column is-full">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="is-size-3 has-text-primary">
+                    {% if bill.table.name == 'order_remote' %}
+                        Conta #{{bill.id}} » Retirar no Balcao
+                    {% else %}
+                        Conta #{{bill.id}} » {{bill.table.name}}
+                    {% endif %}
+                 </h1>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <div class="has-text-centered">
+                    {% if still_have_to_pay %}
+                      <button id="activate_full_payment" class="button is-fullwidth is-primary">Falta pagar: R$ {{ still_have_to_pay|floatformat:2 }}</button>
+                    {% else %}
+                      <button class="button is-fullwidth is-danger">Conta paga</button>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+            {% include 'bill_members_navigation_tab.html' %}
+        </div>
+        {% for bill_member in all_items %}
+          {% include 'bill_members_card.html' %}
+        {% endfor %}
+      </div>
+      {% if is_paginated %}
+        {% include 'pagination.html'%}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+    <div class="modal payment">
+        <div class="modal-background"></div>
+        <div class="modal-content"></div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    
+{% endblock %}
+
+{% block extra-js %}
+<script>
+    var create_full_payment_url = "{% url 'register:bill_payment_create' bill.id %}";
+    var create_member_payment_url = "";
+    var confirm_payment_url = "";
+    
+
+    $("#activate_full_payment").click(function(){
+        
+        $.get(create_full_payment_url, function(){
+        })
+            
+        .done(function(data){
+            $(".modal.payment > .modal-content").html(data);
+            $(".modal.payment").addClass("is-active");
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+            
+        .fail(function(xhr){
+        });
+        
+        $(".modal-close, .modal-background").click(function(){
+            $(this).parents(".modal").removeClass("is-active");
+        });
+        
+        $("#cancel").click(function (event) {
+            event.preventDefault();
+            $(this).parents(".modal").removeClass("is-active");
+        });
+        
+    });
+    
+    function closeModal(event){
+        $(".modal").removeClass("is-active");
+    }
+    
+    function confirmPayment(payment_id){
+        confirm_payment_url = '/bill/payment/aprove_or_reject/' + payment_id + '/';
+        
+        $.get(confirm_payment_url, function(){
+            console.log("Fetching data");
+        })
+        
+        .done(function(data){
+            console.log("Data fetched succesfully :)");
+            $(".modal.payment > .modal-content").html(data);
+            $(".modal.payment").addClass("is-active");
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+            
+        .fail(function(xhr){
+            console.log("Error: ", xhr);
+        });
+        
+        $(".modal-close, .modal-background").click(function(){
+            $(this).parents(".modal").removeClass("is-active");
+        });
+        
+    }
+    
+    function submitConfirmation(){
+            
+        $.post(confirm_payment_url, $('#payment_form').serialize())
+        
+        .done(function (data) {
+            location.reload(); 
+        })
+    
+        .fail(function (xhr) {
+            console.log("Error: ", xhr);
+        });
+    }
+    
+    function createPayment(bill_member_id){
+        
+        create_member_payment_url = '/bill/payment/create/bill_member/' + bill_member_id + '/';
+        
+        $.get(create_member_payment_url, function(){
+            console.log("Fetching data");
+        })
+            
+        .done(function(data){
+            console.log("Data fetched succesfully :)");
+            $(".modal.payment > .modal-content").html(data);
+            $(".modal.payment").addClass("is-active");
+            $(".modal .modal-content button.is-danger").click(function(){
+                $(".modal").removeClass("is-active");
+            });
+        })
+            
+        .fail(function(xhr){
+            console.log("Error: ", xhr);
+        });
+    
+        $(".modal-close, .modal-background").click(function(){
+            $(this).parents(".modal").removeClass("is-active");
+        });
+    }
+    
+    function submitPayment(){
+        $.ajax({
+            url: create_member_payment_url,
+            type: 'post',
+            dataType: 'json',
+            data: $('#payment_form').serialize(),
+            success: function(data) {
+                location.reload(); 
+            },
+            error: function(data){
+                //console.log(data);
+                $("#payment_value").focus();
+                alert("O valor do pagamento está incorreto!");
+            }
+        })
+    }
+
+</script>
+{% endblock %}

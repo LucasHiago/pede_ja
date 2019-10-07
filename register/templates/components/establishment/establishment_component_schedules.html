@@ -1,0 +1,207 @@
+{% extends 'components/establishment/establishment_component_base.html' %}
+
+{% block title %}Horários{% endblock %}
+
+{% block buttons %}
+<a id="card-schedule" href="{% url 'register:operating_hour_create' establishment.pk %}"> Adicionar Horário </a>
+{% endblock buttons %}
+
+{% block content %}
+
+<div class="level is-bg-tertiary has-pad-2 has-magb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Dia</label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">Horário</label>
+        </div>
+    </div>
+</div>
+
+
+{% for operating_hour in operating_hours %}
+{% if operating_hour.dow == 0 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Segunda-feira
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% elif operating_hour.dow == 1 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Terça-feira
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% elif operating_hour.dow == 2 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Quarta-feira
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% elif operating_hour.dow == 3 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Quinta-feira
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% elif operating_hour.dow == 4 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Sexta-feira
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% elif operating_hour.dow == 5 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Sábado
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% elif operating_hour.dow == 6 %}
+<div class="level is-border-bottom-c has-padb-2">
+    <div class="level-left">
+        <div class="level-item">
+            <label for="" class="label is-size-6 has-text-weight-normal has-text-tertiary">
+                Domingo
+            </label>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="level-item">
+            <label class="label is-size-6 has-text-weight-normal has-text-tertiary">
+              {{ operating_hour.opening_time }} às {{ operating_hour.closing_time }}
+            </label>
+        </div>
+        <a onclick="updateAction('{% url 'register:operating_hour_delete' operating_hour.pk %}', '{{ csrf_token }}')"
+            class="button icon has-text-grey-light"> <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+
+{% else %}
+{% endif %}
+{% endfor %}
+
+<div class="modal table_item">
+    <div class="modal-background"></div>
+    <div id="warn" class="warn is-inactive"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<script>
+    $("a#card-schedule").click(function (e) {
+        e.stopImmediatePropagation(); // those pesky handlers
+        e.preventDefault();
+        url = this.href;
+
+        $.get(url, function () {
+            console.log("Fetching data");
+        })
+            .done(function (data) {
+                console.log("Data fetched succesfully :)");
+                $(".modal.table_item > .modal-content").html(data);
+                $(".modal.table_item").addClass("is-active");
+                $(".modal .modal-content button.is-danger").click(function () {
+                    $(".modal").removeClass("is-active");
+                });
+            })
+            .fail(function (xhr) {
+                console.log("Error: ", xhr);
+            });
+
+        $(".modal-close, .modal-background").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+{% endblock content %}
